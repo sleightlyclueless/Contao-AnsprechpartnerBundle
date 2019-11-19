@@ -1,24 +1,32 @@
 <?php
 
+/**
+ * @package   AnsprechpartnerBundle
+ * @author    (c) IXTENSA GmbH & Co. KG Internet und Webagentur -- Sebastian Zill
+ * @license   GNU LGPL 3+
+ * @copyright (c) 2019
+ */
+ 
 // DCA Erweiterungen: Backend von Contao um Data Container Arrays Erweitern: Zusätzliche Eingabefeleder für verschiedenste Bereiche erstellen und konfigurieren. z.B. Für Backend Module
 
 // Namespace: Der eindeutige Pfad, der auf diese entsprechende PHP Datei zeigt, damit sie von anderen Orten aus eindeutig aufgerufen und oder referenziert werden kann.
 namespace ixtensa\AnsprechpartnerBundle\dca\tl_content;
 
+// Wir brauchen unser Widget AnsprechpartnerPicker für dieses DCA, das wir in der entsprechenden /Widget/Ansprechpartnerpicker.php erstellt und konfiguriert haben. Wir holen uns es also per Namespace hier zum verwenden
 use \ixtensa\AnsprechpartnerBundle\Widget\AnsprechpartnerPicker;
-use \ixtensa\AnsprechpartnerBundle\Widget\AbtMenu;
 
-// Wir fügen Felder, Labels und so weiter für unsere Module jetzt zu Contao hinzu - und brauchen dafür immer eine bestimmte Tabelle, die in der /Resources/contao/config/config.php schon instanziert wurde. Da für den entsprechenden Backend Bereich immer Modular die gleiche Tabelle verwendet werden sollte ist es besser wenn wir diese hier zentral anlegen. Man wird sehen der $strName kommt in dieser Datei oft vor. Wenn sich der Tabellenname ändern soll müssen wir das hier dann nur einmal konfigurieren.
+// Wir fügen jetzt wieder Felder, Labels und so weiter für unsere Module zu Contao hinzu - und brauchen dafür immer eine bestimmte Tabelle, die in der /Resources/contao/config/config.php schon instanziert wurde. In diesem Fall erweitern wir allerdings  eine bereits bestehende Tabelle für die Inhaltselemente der Artikel - die tl_content. Da für den entsprechenden Backend Bereich immer Modular die gleiche Tabelle verwendet werden sollte ist es besser wenn wir diese hier zentral anlegen. Man wird sehen der $strName kommt in dieser Datei oft vor. Wenn sich der Tabellenname ändern soll müssen wir das hier dann nur einmal konfigurieren.
 $strName = 'tl_content';
 
-
+// Wieder einmal die toggleIcon Funktion (ist in der /Resources/contao/dca/tl_bemod_ansprechpartner.php besser beschrieben) um Elemente aus und einzublenden und Ihre Datenbank Einträge entsprechend anzupassen.
 $GLOBALS['TL_DCA'][$strName]['list']['operations']['toggle']['button_callback'] = array('tl_content', 'toggleIcon');
+// Die Meta Fields des Elements übernehmen wir wie es in jedem Inhaltselement der Fall sein sollte auch in dieses.
 $GLOBALS['TL_DCA'][$strName]['list']['sorting']['headerFields'] = array('title', 'tstamp', 'language');
 
-
-// Palettes
+// Paletten für unser spezielles Inhaltselement unter dem Namen 'ansprechpartner_einzeln' werden nun um folgende Felder erweitert. Viele Felder und Legends hiervon gab es bereits und sie wurden anhand vorheriger Elemente entsprechend wieder verwendet.
 $GLOBALS['TL_DCA'][$strName]['palettes']['ansprechpartner_einzeln'] =  '{type_legend},type;{headline_legend},headline;{contactPerson_legend},ansprechpartnerpicker;{expert_legend:hide},guests,cssID;{grid_legend},grid_columns,grid_options;{invisible_legend:hide},invisible,start,stop;';
 
+// Unser Element vom Typ 'AnsprechpartnerPicker' erlaubt es uns über unser eigenes Widget per select Menü einen einzigen der erstellten Ansprechpartner an dieser Stelle einzufügen. Dieses Select Menü nimmt sich aus der Datenbank aller erstellten Ansprechpartner im Backend Modul die Namen und Listet diese in einem Auswahlmenü auf. Das Widget wurde unter /Widget/AnsprechpartnerPicker.php erstellt und konfiguriert. Hier wird es entsprechend verwendet.
 $GLOBALS['TL_DCA'][$strName]['fields']['ansprechpartnerpicker'] = array
 (
     'label'                   => &$GLOBALS['TL_LANG'][$strName]['ansprechpartnerpicker'],
@@ -28,14 +36,13 @@ $GLOBALS['TL_DCA'][$strName]['fields']['ansprechpartnerpicker'] = array
     'flag'                    => 1,
     'inputType'               => 'AnsprechpartnerPicker',
     'foreignKey'              => 'tl_bemod_ansprechpartner.CONCAT(name," | ",firstname)',
-    // 'foreignKey'              => 'tl_bemod_ansprechpartner.name',
     'eval'                    => array('multiple'=>false),
     // 'sql'                     => "varchar(255) NOT NULL default ''"
     'sql'                     => "blob NULL"
 );
 
 
-
+// Auch hier nehmen wir wieder ein paar Funktionen für unsere Elemente auf. Allerdings handelt es sich hierbei nur um die 'toggleIcon' und 'toggleVisibility' - Funktionen, die wir aus der /Resources/contao/dca/tl_bemod_ansprechpartner.php bereits besser beschrieben kennen. Wird grob gesagt verwendet, um Elemente aus und einzublenden und Ihre Datenbank Einträge entsprechend anzupassen.
 class tl_content_ansprechpartner extends \Backend
 {
 	/**

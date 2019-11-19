@@ -5,17 +5,13 @@
 
 ### What is this repository for? ###
 
-* Adds a central management module for contact persons to contao which can be both managed inside of the module as well as included as article elements in the frontend
+* Erweitert Contao um sowohl ein Backend Modul zum Anlegen und verwalten zentraler Ansprechpartner und Kontaktpersonen, sowie zugehörigen Abteilungen in separatem Backend Modul, als auch Inhaltselemente und Frontend Module zum Einfügen dieser Ansprechpartner mit unterschiedlichen Einstellungsmöglichkeiten in die Artikel für das Frontend von Contso | Extension for contao to add contact person management where you, in a central backend module, add various contact persions with names, roles in your company etc. as well as their departements. Then display those contact persons and departements within article elements this extension also adds
 
 ### How do I get setup? ###
 
-1. Add folder to your dependencies
-2. Refresh the database
-
-#### How it's work? ####
-
-1. This extension does nothing special (yet)
-
+1. Add folder to your installation
+2. Update dependencies
+3. Refresh the database
 
 ### Change log ###
 

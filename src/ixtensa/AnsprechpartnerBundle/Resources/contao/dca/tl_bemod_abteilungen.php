@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * @package   AnsprechpartnerBundle
+ * @author    (c) IXTENSA GmbH & Co. KG Internet und Webagentur -- Sebastian Zill
+ * @license   GNU LGPL 3+
+ * @copyright (c) 2019
+ */
+ 
 // DCA Erweiterungen: Backend von Contao um Data Container Arrays Erweitern: Zusätzliche Eingabefeleder für verschiedenste Bereiche erstellen und konfigurieren. z.B. Für Backend Module
 
 // Namespace: Der eindeutige Pfad, der auf diese entsprechende PHP Datei zeigt, damit sie von anderen Orten aus eindeutig aufgerufen und oder referenziert werden kann.
@@ -15,7 +22,7 @@ $GLOBALS['TL_DCA'][$strName] = array
 	// Config – Die Config erstellt noch keine Felder, gibt aber Meta Informationen über das Inhaltselement, hier sind alle möglichen Einstellungen
 	'config' => array
 	(
-        // Wir sind im Spracheinstellungs - Hauptmenü von den Abteilungen. Deswegen gibt es hier eine Child Table, die Übersetzungen der Abteilungen. Ein kreuzverweis zu unserer Tabelle als parent ist dort auch. Es kann mehrere Child Tables geben!
+        // SONDERFALL Wir sind im Spracheinstellungs - Hauptmenü von den Abteilungen. Deswegen gibt es hier eine Child Table, die Übersetzungen der Abteilungen. Ein kreuzverweis zu unserer Tabelle als parent ist dort auch. Es kann mehrere Child Tables geben!
         // Weitere Felder hier nachlesen: https://docs.contao.org/books/api/dca/reference.html#table-configuration
         'ctable'                      => array('tl_bemod_abteilungen_lang'),
         'dataContainer'               => 'Table',
@@ -145,6 +152,7 @@ $GLOBALS['TL_DCA'][$strName] = array
             'label'                   => &$GLOBALS['TL_LANG'][$strName]['abtname'],
         	'exclude'                 => true,
             'search'                  => true,
+			'sorting'                 => true,
         	'inputType'               => 'text',
         	'eval'                    => array(
                                             'maxlength'=>255,

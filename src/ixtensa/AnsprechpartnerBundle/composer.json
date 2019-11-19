@@ -1,6 +1,6 @@
 {
 	"name": "Ixtensa AnsprechpartnerBundle",
-	"description": "Erweitert Contao um sowohl ein Backend Modul zum Anlegen und verwalten zentraler Ansprechpartner und Kontaktpersonen, als auch ein Inhaltselements zum Einfügen dieser Ansprechpartner mit unterschiedlichen Einstellungsmöglichkeiten in die Artikel | Extension for contao to add contact person management where you, in a central backend module, add various contact persions with names, roles in your company etc. and then display those with article elements this extension also adds ",
+	"description": "Erweitert Contao um sowohl ein Backend Modul zum Anlegen und verwalten zentraler Ansprechpartner und Kontaktpersonen, sowie zugehörigen Abteilungen in separatem Backend Modul, als auch Inhaltselemente und Frontend Module zum Einfügen dieser Ansprechpartner mit unterschiedlichen Einstellungsmöglichkeiten in die Artikel für das Frontend von Contso | Extension for contao to add contact person management where you, in a central backend module, add various contact persions with names, roles in your company etc. as well as their departements. Then display those contact persons and departements within article elements this extension also adds",
 	"license": "LGPL-3.0-or-later",
     "verison": "1.0.0",
 	"authors": [
@@ -10,7 +10,7 @@
             "mail": "technik@ixtensa.de",
 		}
 	],
-	"keywords": ["contao", "ansprechpartner", "kontaktpersonen"],
+	"keywords": ["contao", "ansprechpartner", "kontaktpersonen", "contact persons", "departements"],
 	"type": "contao-bundle",
 	"require": {
 		"php": ">=7.0",

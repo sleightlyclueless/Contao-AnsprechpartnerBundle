@@ -1,4 +1,4 @@
-<div class="contactperson <?php echo $this->class; ?> grid-container block columns small-12">
+<div class="ansprechpartner <?php echo $this->class; ?> grid-container block columns small-12">
 
     <div class="content">
 		<?php if($this->salutation): ?>
