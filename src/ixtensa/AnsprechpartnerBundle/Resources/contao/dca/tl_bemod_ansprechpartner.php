@@ -1,13 +1,20 @@
 <?php
 
+/**
+ * @package   AnsprechpartnerBundle
+ * @author    (c) IXTENSA GmbH & Co. KG Internet und Webagentur -- Sebastian Zill
+ * @license   GNU LGPL 3+
+ * @copyright (c) 2019
+ */
+ 
 // DCA Erweiterungen: Backend von Contao um Data Container Arrays Erweitern: Zusätzliche Eingabefeleder für verschiedenste Bereiche erstellen und konfigurieren. z.B. Für Backend Module
+// Du bist hier jetzt im Haupt DCA Monster der Erweiterung angekommen. Der zentralen Verwaltung im Backend Modul der Ansprechpartner. Von hier aus gibt es auch einen kreuzverweis zu einem eigenen Widget AbtMenu und querverweis zu dem in der Navigation verstecken Abteilungs Backend Modul
 
 // Namespace: Der eindeutige Pfad, der auf diese entsprechende PHP Datei zeigt, damit sie von anderen Orten aus eindeutig aufgerufen und oder referenziert werden kann.
 namespace ixtensa\AnsprechpartnerBundle\dca\tl_bemod_ansprechpartner;
 
 // Wir fügen Felder, Labels und so weiter für unsere Module jetzt zu Contao hinzu - und brauchen dafür immer eine bestimmte Tabelle, die in der /Resources/contao/config/config.php schon instanziert wurde. Da für den entsprechenden Backend Bereich immer Modular die gleiche Tabelle verwendet werden sollte ist es besser wenn wir diese hier zentral anlegen. Man wird sehen der $strName kommt in dieser Datei oft vor. Wenn sich der Tabellenname ändern soll müssen wir das hier dann nur einmal konfigurieren.
 $strName = 'tl_bemod_ansprechpartner';
-
 
 // Die spezielle Konfiguration der TL_DCA für die Tabelle beginnt nun ab hier. DCA Felder für unsere Tabelle kommen hinzu.
 $GLOBALS['TL_DCA'][$strName] = array
@@ -32,22 +39,18 @@ $GLOBALS['TL_DCA'][$strName] = array
     // https://docs.contao.org/dev/reference/dca/list/
 	'list' => array
 	(
-        // Sortiermodus Konfigurationen der Elemente in der Übersicht
+        // Sortiermodus Konfigurationen der Elemente in der Übersicht - die Überschriften
 		'sorting' => array
 		(
 			'mode'                    => 2,
             'flag'                    => 1,
-            // 'panelLayout'             => 'filter;name,firstname,departementCheckList',
             'panelLayout'             => 'filter;name,firstname',
 			'fields'                  => array('name')
 		),
 
-        // Elementanzeige im Backend. Zeige für das Element folgende DCA 'fields' in diesem 'format'
-        // 'departementCheckList' gibt nur die IDs aus - keine schöne Übersicht und eigentlich auch nicht unbedingt notwendig - habe ich raus genommen
+        // Elementanzeige im Backend. Zeige für das Element folgende DCA 'fields' in diesem 'format' als Elementübersicht (die kurzen Elementkarteikarten in der Backend Modul übersicht der angelegten Elemente)
 		'label' => array
 		(
-			// 'fields'                  => array('name','firstname','departementCheckList'),
-			// 'format'                  => '<b>%s</b>, %s - [%s]'
             'fields'                  => array('name','firstname'),
 			'format'                  => '<b>%s</b>, %s'
 		),
@@ -93,14 +96,6 @@ $GLOBALS['TL_DCA'][$strName] = array
 				'icon'                => 'copy.svg'
 			),
 
-            // Elemente verschieben
-            // 'cut' => array
-			// (
-			// 	'label'               => &$GLOBALS['TL_LANG'][$strName]['cut'],
-			// 	'href'                => 'act=paste&amp;mode=cut',
-			// 	'icon'                => 'cut.svg'
-			// ),
-
             // Element löschen
 			'delete' => array
 			(
@@ -117,6 +112,7 @@ $GLOBALS['TL_DCA'][$strName] = array
 				'icon'                => 'visible.svg',
                 'showInHeader'        => true,
 				'attributes'          => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
+				// Muss als namespace verlinkt werden! Wir sind außerhalb von dem Scope der class Funktionen, auch wenn die Funktion in dieser Datei weiter unten kommt
                 'button_callback'     => array('ixtensa\AnsprechpartnerBundle\dca\tl_bemod_ansprechpartner\tl_bemod_ansprechpartner', 'toggleIcon')
 			),
             // Informationen zeigen
@@ -129,7 +125,6 @@ $GLOBALS['TL_DCA'][$strName] = array
 		)
 	),
 
-
     // Palettes: Paletten in Contao sind die Layout Einstellungen, in denen die Felder dann im Backend für die Elemente generiert und angezeigt werden.
     // Das heißt wir sind jetzt nicht mehr in der Element Übersicht sondern in der eigentlichen Element Bearbeitungs- Erstellungsansicht. Die Paletten geben die Bereiche und die Reihenfolgen der Felder in den Bereichen vor. Die Felder kommen gleich im Menüpunkt 'fields'
     // https://docs.contao.org/dev/reference/dca/palettes/
@@ -139,7 +134,7 @@ $GLOBALS['TL_DCA'][$strName] = array
 		'default' => '{name_legend},salutation,title,name,firstname;{meta_legend},email,phone,jobtitle,departementCheckList,more,addImage;{published_legend},published;'
 	),
 
-    // Subpalettes
+    // Subpalettes: Subpalettes sind die Unter - Überschriften, die weitere Elemente beinhalten. In diesem Fall ist 'addImage' eine Checkbox und wenn man diese angehakt hat, sieht man erst das 'image' Feld
 	'subpalettes' => array
 	(
 		'addImage'                    => 'image',
@@ -170,9 +165,10 @@ $GLOBALS['TL_DCA'][$strName] = array
         (
             'label'                   => &$GLOBALS['TL_LANG'][$strName]['salutation'],
             'exclude'                 => true,
+			'search'                  => false,
             'filter'                  => false,
             'sorting'                 => false,
-            // InputType ist ein Select Menü mit den folgenden Optionen. Die Optionen sind dann in der Languages Datei /Resources/contao/languages/.../tl_bemod_ansprechpartner konfiguriert
+            // InputType ist ein Select Menü mit den folgenden Optionen. Die Optionen sind dann in der Languages Datei /Resources/contao/languages/.../tl_bemod_ansprechpartner.php konfiguriert
             'inputType'               => 'select',
             'options'                 => $GLOBALS['TL_LANG'][$strName]['myselect']['options'],
             'eval'                    => array(
@@ -186,7 +182,8 @@ $GLOBALS['TL_DCA'][$strName] = array
         (
             'label'                   => &$GLOBALS['TL_LANG'][$strName]['title'],
         	'exclude'                 => true,
-            'search'                  => true,
+            'search'                  => false,
+			'filter'                  => false,
         	'sorting'                 => false,
         	'inputType'               => 'text',
         	'eval'                    => array(
@@ -255,8 +252,9 @@ $GLOBALS['TL_DCA'][$strName] = array
         (
         	'label'                   => &$GLOBALS['TL_LANG'][$strName]['phone'],
         	'exclude'                 => true,
-        	'search'                  => true,
+        	'search'                  => false,
             'sorting'                 => false,
+			'filter'                  => false,
         	'inputType'               => 'text',
         	'eval'                    => array(
                                             'maxlength'=>64,
@@ -273,6 +271,7 @@ $GLOBALS['TL_DCA'][$strName] = array
         	'exclude'                 => true,
             'search'                  => true,
         	'sorting'                 => false,
+			'filter'                  => false,
         	'inputType'               => 'text',
         	'eval'                    => array(
                                             'maxlength'=>255,
@@ -282,37 +281,15 @@ $GLOBALS['TL_DCA'][$strName] = array
                                         ),
         	'sql'                     => "varchar(255) NOT NULL default ''"
         ),
-
-        // Altes Element mit checkbox Liste für Abteilungen, die aus festem String in langugages Datei kommen
-        // 'department' => array
-        // (
-        //     'label'                   => &$GLOBALS['TL_LANG'][$strName]['department'],
-        //     'exclude'                 => true,
-        //     'filter'                  => true,
-        //     'sorting'                 => true,
-        //     'flag'                    => 1,
-        //     'inputType'               => 'checkbox',
-        //     'options'                 => $GLOBALS['TL_LANG'][$strName]['department_options'],
-        //     'eval'                    => array(
-        //                                     'maxlength'=>50,
-        //                                     'feEditable'=>true,
-        //                                     'feViewable'=>true,
-        //                                     'feGroup'=>'qualifications',
-        //                                     'multiple' => true,
-        //                                     'mandatory'=>true,
-        //                                     'tl_class'=>'clr'
-        //                                 ),
-        //     'sql'                => "varchar(50) NOT NULL default ''"
-        // ),
-
         // SONDERFALL:
         // Eigenes Widget Checkbox Menü Feld mit Abteilungen aus Abteilungserweiterung, die in Checklistenformat ausgegeben werden (Dateien: config, tl_bemod_abteilungen, /Widget/Abtmenu.php)
         'departementCheckList' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG'][$strName]['departementCheckList'],
 			'exclude'                 => true,
-            'filter'                  => true,
+			'search'                  => true,
             'sorting'                 => true,
+			'filter'                  => true,
             'flag'                    => 1,
             'inputType'               => 'AbtMenu',
             'foreignKey'              => 'tl_bemod_abteilungen.abtname',
@@ -334,17 +311,23 @@ $GLOBALS['TL_DCA'][$strName] = array
         (
         	'label'                   => &$GLOBALS['TL_LANG'][$strName]['more'],
         	'exclude'                 => true,
-        	'search'                  => true,
+        	'search'                  => false,
+			'sorting'                 => false,
+			'filter'                  => false,
         	'inputType'               => 'textarea',
         	'eval'                    => array(
                                             'rte'=>'tinyMCE'
                                         ),
         	'sql'                     => "mediumtext NULL"
         ),
+		// Subpalettes Headline checkbox zum einblenden zum hinzufügen des image dca Feldes
         'addImage' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG'][$strName]['addImage'],
 			'exclude'                 => true,
+			'search'                  => false,
+			'sorting'                 => false,
+			'filter'                  => false,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
 			'sql'                     => "char(1) NOT NULL default ''"
@@ -352,16 +335,19 @@ $GLOBALS['TL_DCA'][$strName] = array
         // Bild Filetree Element zum hinzufügen von Bildern
         'image' => array
         (
-            'label'		=> &$GLOBALS['TL_LANG'][$strName]['image'],
-			'exclude'		=> true,
-			'inputType'		=> 'fileTree',
-			'eval'			=> array(
-                                    'filesOnly'=>true,
-                                    'fieldType'=>'radio',
-                                    'extensions' => 'jpg,png,gif',
-                                    'tl_class'=>'clr'
-                                ),
-            'sql'           => "binary(16) NULL"
+            'label'				      => &$GLOBALS['TL_LANG'][$strName]['image'],
+			'exclude'			      => true,
+			'search'      		      => false,
+			'sorting'     		      => false,
+			'filter'     		      => false,
+			'inputType'			      => 'fileTree',
+			'eval'				      => array(
+                                        		'filesOnly'=>true,
+                                        		'fieldType'=>'radio',
+                                        		'extensions' => 'jpg,png,gif',
+                                        		'tl_class'=>'clr'
+                                    		),
+            'sql'       		      => "binary(16) NULL"
 
         ),
         // Veröffentlichungs Checkbox, die in die Datenbank eine 1 oder NULL schreibt
@@ -369,6 +355,8 @@ $GLOBALS['TL_DCA'][$strName] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG'][$strName]['published'],
 			'exclude'                 => true,
+			'search'      		      => true,
+			'sorting'     		      => true,
 			'filter'                  => true,
 			'flag'                    => 1,
 			'inputType'               => 'checkbox',
@@ -387,7 +375,7 @@ $GLOBALS['TL_DCA'][$strName] = array
 class tl_bemod_ansprechpartner extends \Backend
 {
     /**
-	 * Import the back end user object
+	 * Den Backend User importieren
 	 */
 	public function __construct()
 	{
@@ -395,9 +383,8 @@ class tl_bemod_ansprechpartner extends \Backend
 		$this->import('\BackendUser', 'User');
 	}
 
-
     /**
-	 * Return the "toggle visibility" button
+	 * Die vom Contao größtenteils übernommene Funktion vom toggleIcon wird ausgelöst, wenn man in der Element Übersicht auf das Augen - toggle Symbol klickt. Wenn man diese Funktion auslöst, wird das Icon entsprechend verändert wird gleichzeitig auch noch die toggleVisibility Funktion ausgelöst, um im Element selber das Feld entsprechend des Icons in der Datenbank zu ändern
 	 *
 	 * @param array  $row
 	 * @param string $href
@@ -408,9 +395,9 @@ class tl_bemod_ansprechpartner extends \Backend
 	 *
 	 * @return string
 	 */
-	// public function toggleIcon()
     public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
+		// Toggle id aus dem Element ziehen - Marker welches Element gerade getoggelt wurde
 		if (\mb_strlen(\Input::get('tid')))
 		{
 			$this->toggleVisibility(\Input::get('tid'), (\Input::get('state') == 1), (@func_get_arg(12) ?: null));
@@ -423,6 +410,7 @@ class tl_bemod_ansprechpartner extends \Backend
 			return '';
 		}
 
+		// Verlinkung und toggle Bild hinzufügen und verändern
 		$href .= '&amp;tid='.$row['id'].'&amp;state='.($row['published'] ? '' : 1);
 
 		if (!$row['published'])
@@ -431,18 +419,15 @@ class tl_bemod_ansprechpartner extends \Backend
 		}
 
 		return '<a href="'.$this->addToUrl($href).'" title="'.\StringUtil::specialchars($title).'"'.$attributes.'>'.\Image::getHtml($icon, $label, 'data-state="' . ($row['published'] ? 1 : 0) . '"').'</a> ';
-        // return;
 	}
 
-
     /**
-	 * Toggle the visibility of a form field
+	 * Die vom Contao größtenteils übernommene Funktion vom toggleVisibility. Wenn man diese Funktion auslöst, wird das entsprechende Element, für dieses diese Funktion ausgelöst wurde geupdated. Das Feld published kriegt nämlich den entsprechend anderen Zustand - ein oder ausgeblendet und die Datenbank entsprechend geupdated
 	 *
 	 * @param integer       $intId
 	 * @param boolean       $blnVisible
 	 * @param \DataContainer $dc
 	 */
-	// public function toggleVisibility()
     public function toggleVisibility($intId, $blnVisible, \DataContainer $dc=null)
 	{
 		// Set the ID and action
@@ -543,13 +528,10 @@ class tl_bemod_ansprechpartner extends \Backend
 		}
 
 		$objVersions->create();
-        // return;
 	}
 
 
-    /**
-	 * Die Abteilungen beim Öffnen eines Absprechpartners laden
-	 */
+    // Die Abteilungen des eigenen Widgets AbtMenu beim Öffnen eines Ansprechpartners laden. Dieses Callback ist für neue Widgets nämlich noch nicht definiert und lässt man es weg werden diese Felder einfach weder gespeichert noch geladen
     public function getSelectedAbteilungen($varValue, DataContainer $dc) {
 		$tmp = array();
 		$abtId = $dc->id;
@@ -567,9 +549,7 @@ class tl_bemod_ansprechpartner extends \Backend
 		return $res;
 	}
 
-    /**
-	 * Die Abteilungen beim Speichern eines Absprechpartners eintragen
-	 */
+    // Die Abteilungen beim Speichern eines Ansprechpartners in die Datenbank in das entsprechende Feld eintragen. Dieses Callback ist für neue Widgets nämlich noch nicht definiert und lässt man es weg werden diese Felder einfach weder gespeichert noch geladen
     public function saveAbteilungen($varValue, DataContainer $dc)
     {
         $abtId = $dc->id;
@@ -593,26 +573,4 @@ class tl_bemod_ansprechpartner extends \Backend
     	}
     	return $varValue;
     }
-
-    public function setSingleSrcFlags($varValue, Contao\DataContainer $dc)
-	{
-		if ($dc->activeRecord)
-		{
-			switch ($dc->activeRecord->type)
-			{
-				case 'text':
-				case 'hyperlink':
-				case 'image':
-				case 'accordionSingle':
-					$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = Config::get('validImageTypes');
-					break;
-
-				case 'download':
-					$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = \Config::get('allowedDownload');
-					break;
-			}
-		}
-
-		return $varValue;
-	}
 }

@@ -1,12 +1,10 @@
 <?php
 
 /**
- * Contao Open Source CMS
- *
- * Copyright (c) 2005-2016 Leo Feyer
- *
- * @license LGPL-3.0+
- * test entry
+ * @package   AnsprechpartnerBundle
+ * @author    (c) IXTENSA GmbH & Co. KG Internet und Webagentur -- Sebastian Zill
+ * @license   GNU LGPL 3+
+ * @copyright (c) 2019
  */
 
 namespace ixtensa\AnsprechpartnerBundle\Widget;

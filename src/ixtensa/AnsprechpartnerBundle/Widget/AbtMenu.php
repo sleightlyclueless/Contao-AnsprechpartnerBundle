@@ -1,29 +1,24 @@
 <?php
 
+/**
+ * @package   AnsprechpartnerBundle
+ * @author    (c) IXTENSA GmbH & Co. KG Internet und Webagentur -- Sebastian Zill
+ * @license   GNU LGPL 3+
+ * @copyright (c) 2019
+ */
+
 // Eigenes Widget Checkbox Menü Feld mit Abteilungen aus Abteilungserweiterung, die in Checklistenformat ausgegeben werden (Dateien: config, tl_bemod_abteilungen, /Widget/Abtmenu.php)
 // Der Code wurde vom Contao Core verwendet und leicht abgeändert (vendor/contao/core-bundle/src/Resources/contao/widgets/CheckBox.php)
 
-/*
- * This file is part of Contao.
- *
- * (c) Leo Feyer
- *
- * @license LGPL-3.0-or-later
- */
-
+// Namespace: Der eindeutige Pfad, der auf diese entsprechende PHP Datei zeigt, damit sie von anderen Orten aus eindeutig aufgerufen und oder referenziert werden kann.
 namespace ixtensa\AnsprechpartnerBundle\Widget;
 
+// Wir brauchen für dieses Widget die globale HelperClass vom AttributeBagInterface von Symfonie für Globale Seiten - Daten. Wir holen uns es also per Namespace hier zum verwenden. Um den Stand der Checkboxen in den Funktionen zu verwenden und verändern zu können (angehakt oder nicht angehakt)
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 
-/**
- * Provide methods to handle check boxes.
- *
- * @property array   $options
- * @property boolean $multiple
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
+// Die neue Checkbox im Zuge des AbtMenu ´s wird jetzt als Klasse zu den Widgets von Contao / Symfonie hinzugefügt, kann dann also als Classe / Widget später in der DCA Datei referenziert und verwendet werden.
+// Noch einmal: Der folgende Code stammt hauptsächlich nun von der (vendor/contao/core-bundle/src/Resources/contao/widgets/CheckBox.php) und wurde für unser Widget leicht angepasst. Durch den 'foreignKey'  => 'tl_bemod_ansprechpartner aus der DCA Datei kommen hier dann unsere Optionen aus der Ansprechpartner Erweiterung hinzu.
 class AbtMenu extends \Widget
 {
 

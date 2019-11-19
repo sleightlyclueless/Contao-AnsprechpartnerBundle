@@ -7,10 +7,10 @@
  * @copyright (c) 2019
  */
 
-// Define the namespace for our bundle folder location (also present in the file 'ContaoManagerPlugin.php')
+ // Namespace: Der eindeutige Pfad, der auf diese entsprechende PHP Datei zeigt, damit sie von anderen Orten aus eindeutig aufgerufen und oder referenziert werden kann. Gibt es auch auf selber Ebene in der 'ContauManagerPlugin.php'. Diese Datei wird von der /src/DependencyInjection/ContaoManagerPlugin.php aufgerufen.
 namespace ixtensa\AnsprechpartnerBundle;
 
-// Add Bundle to the Symfonie Kernel
+// Bundle KLasse zum Symfonie Kernel hinzufügen
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class AnsprechpartnerBundle extends Bundle

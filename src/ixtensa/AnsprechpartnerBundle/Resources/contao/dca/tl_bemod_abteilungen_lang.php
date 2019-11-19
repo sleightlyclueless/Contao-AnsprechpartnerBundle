@@ -1,13 +1,19 @@
 <?php
 
-// DCA Erweiterungen: Backend von Contao um Data Container Arrays Erweitern: Zusätzliche Eingabefeleder für verschiedenste Bereiche erstellen und konfigurieren. z.B. Für Backend Module
+/**
+ * @package   AnsprechpartnerBundle
+ * @author    (c) IXTENSA GmbH & Co. KG Internet und Webagentur -- Sebastian Zill
+ * @license   GNU LGPL 3+
+ * @copyright (c) 2019
+ */
+ 
+// DCA Erweiterungen: Backend von Contao um Data Container Arrays Erweitern: Zusätzliche Eingabefeleder für verschiedenste Bereiche erstellen und konfigurieren. z.B. Für Backend Module hier
 
 // Namespace: Der eindeutige Pfad, der auf diese entsprechende PHP Datei zeigt, damit sie von anderen Orten aus eindeutig aufgerufen und oder referenziert werden kann.
 namespace ixtensa\AnsprechpartnerBundle\dca\tl_bemod_abteilungen_lang;
 
 // Wir fügen Felder, Labels und so weiter für unsere Module jetzt zu Contao hinzu - und brauchen dafür immer eine bestimmte Tabelle, die in der /Resources/contao/config/config.php schon instanziert wurde. Da für den entsprechenden Backend Bereich immer Modular die gleiche Tabelle verwendet werden sollte ist es besser wenn wir diese hier zentral anlegen. Man wird sehen der $strName kommt in dieser Datei oft vor. Wenn sich der Tabellenname ändern soll müssen wir das hier dann nur einmal konfigurieren.
 $strName = 'tl_bemod_abteilungen_lang';
-
 
 // Die spezielle Konfiguration der TL_DCA für die Tabelle beginnt nun ab hier. DCA Felder für unsere Tabelle kommen hinzu.
 $GLOBALS['TL_DCA'][$strName] = array
@@ -116,7 +122,7 @@ $GLOBALS['TL_DCA'][$strName] = array
 			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
 		),
 
-        // SONDERFALL: Wir haben einen Fremdschlüssel von einer parent Table, die oben konfiguriert / verknüpft wurde. Den Eintrag pid von dort wollen wir hier dann für die Joins auch haben
+        // SONDERFALL: Wir haben einen Fremdschlüssel 'foreignKey' von einer parent Table, die eine Ebene höher in der /Resources/contao/dca/tl_bemod_abteilungen.php konfiguriert und verknüpft wurde. Den Eintrag pid von dort zu dieser child table wollen wir hier dann für die Joins wieder entsprechend zurück auch haben.
         'pid' => array
         (
             'foreignKey'              => 'tl_bemod_abteilungen.abtname',
@@ -129,6 +135,7 @@ $GLOBALS['TL_DCA'][$strName] = array
 			'sql'                     => "int(10) unsigned NOT NULL default '0'"
 		),
 
+
         // DCA Fields für das Element
         // Übersetzungs Sprache – Sprachkürzel nach ISO Norm Eingabefeld
         'abtname_lang' => array
@@ -136,7 +143,7 @@ $GLOBALS['TL_DCA'][$strName] = array
             'label'                   => &$GLOBALS['TL_LANG'][$strName]['abtname_lang'],
         	'exclude'                 => true,
             'search'                  => true,
-        	'sorting'                 => false,
+        	'sorting'                 => true,
         	'inputType'               => 'text',
         	'eval'                    => array(
                                             'mandatory'=>true,
