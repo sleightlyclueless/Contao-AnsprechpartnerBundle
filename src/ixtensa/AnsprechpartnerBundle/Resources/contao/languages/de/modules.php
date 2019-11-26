@@ -6,7 +6,7 @@
  * @license   GNU LGPL 3+
  * @copyright (c) 2019
  */
- 
+
 // Übersetzen und betexten von in der /Resources/contao/config/config.php erstellten neuen Backend Modulen
 $GLOBALS['TL_LANG']['MOD']['zix_ansprechpartner'] = ['Ansprechpartner'];
 $GLOBALS['TL_LANG']['MOD']['ansprechpartner'] = ['Ansprechpartner', 'Legen Sie hier zentrale Ansprechpartner und zugehörige Abteilungen an'];

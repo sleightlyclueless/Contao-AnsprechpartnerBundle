@@ -1,51 +1,57 @@
 <div class="ansprechpartner <?php echo $this->class; ?> grid-container block columns small-12">
+    <!-- Sehen Sie Ihren Ansprechpartner nicht? Vielleicht ist er in der Verwaltungsoberfläche oder dem Artikel selbst ausgeblendet?-->
+    <?php if($this->published): ?>
+        <div class="ce_ix_ansprechpartner">
+            <div class="ce_ix_ansprechpartner_wrapper">
 
-    <div class="content">
-		<?php if($this->salutation): ?>
-			<p><?= $this->salutation ?></p>
-		<?php endif; ?>
-        <?php if($this->title): ?>
-			<p><?= $this->title ?></p>
-		<?php endif; ?>
-        <?php if($this->firstname && $this->name): ?>
-			<p class="name">
-				<?= $this->firstname . ' ' . $this->name ?>
-			</p>
-		<?php endif; ?>
-        <?php if($this->jobtitle): ?>
-			<p><?= $this->jobtitle ?></p>
-		<?php endif; ?>
-        <?php if($this->email): ?>
-            <a class="email" href="mailto:<?= $this->email ?>">
-				<?= $this->email ?>
-			</a>
-		<?php endif; ?>
-        <?php if($this->phone): ?>
-			<p class="tel">
-				<?= $this->phone ?>
-			</p>
-		<?php endif; ?>
-        <?php if($this->more): ?>
-			<p class="more">
-			<?= $this->more ?>
-			</p>
-		<?php endif; ?>
-        <?php if($this->departementCheckList): ?>
-			<?= $this->departementCheckList ?>
-		<?php endif; ?>
+                <?php if($this->addImage): ?>
+                	<div class="ce_ix_ansprechpartner_image">
 
-    </div>
-    <?php if($this->addImage): ?>
-    <div class="img columns small-12 medium-3">
-        <figure class="image_container"<?php if ($this->margin): ?> style="<?= $this->margin ?>"<?php endif; ?>>
+                		<figure class="image_container" <?php if ($this->margin): ?> style="<?= trim($this->margin); ?>"<?php endif; ?>>
 
-        <?php $this->insert('picture_default', $this->picture); ?>
+                        <?php if ($this->resizePath): ?>
+                            <img src="<?= $this->resizePath ?>" alt="<?= $this->alt ?>" />
+                        <?php else: ?>
+                            <img src="<?= $this->path ?>" alt="<?= $this->alt ?>" />
+                        <?php endif; ?>
 
-        <?php if ($this->captionHeader): ?>
-        	<figcaption class="caption"><?= $this->captionHeader ?></figcaption>
-        <?php endif; ?>
+                		<?php if ($this->caption): ?>
+                		    <figcaption class="caption"><?= $this->caption ?></figcaption>
+                		<?php endif; ?>
+                		</figure>
 
-        </figure>
-    </div>
+                	</div>
+            	<?php endif; ?>
+
+                <div class="ce_ix_ansprechpartner_content">
+                    <?php if($this->firstname && $this->name): ?>
+            		    <p class="ce_ix_ansprechpartner_salutation">
+                        <b>Anrede: </b><?= $this->salutation . ' ' . $this->title . ' ' . $this->firstname . ' ' . $this->name?></p>
+                    <?php endif; ?>
+                    <?php if($this->jobtitle): ?>
+                        <p class="ce_ix_ansprechpartner_jobtitle">
+                        <b>Tätigkeit: </b><?= $this->jobtitle ?></p>
+            		<?php endif; ?>
+                    <?php if($this->phone): ?>
+            			<p class="ce_ix_ansprechpartner_tel">
+                        <b>Telefonnummer: </b><?= $this->phone ?></p>
+            		<?php endif; ?>
+                    <?php if($this->email): ?>
+                        <p class="ce_ix_ansprechpartner_email">
+                            <b>Mailadresse: </b>
+                            <a href="mailto:<?= $this->email ?>"><?= $this->email ?></a>
+                        </p>
+            		<?php endif; ?>
+                    <?php if($this->departementCheckListReader): ?>
+                        <p class="ce_ix_ansprechpartner_departements">
+                        <b>Zugehörige Abteilungen: </b><?= $this->departementCheckListReader ?></p>
+            		<?php endif; ?>
+                    <?php if($this->more): ?>
+            			<div class="ce_ix_ansprechpartner_more">
+                        <b>Weitere Angaben: </b><?= $this->more ?></div>
+            		<?php endif; ?>
+                </div>
+            </div>
+        </div>
     <?php endif; ?>
 </div>

@@ -6,7 +6,7 @@
  * @license   GNU LGPL 3+
  * @copyright (c) 2019
  */
- 
+
 // Übersetzen und betexten von in der /Resources/contao/dca/tl_bemod_abteilungen.php erstellten DCA Feldern
 
 // Wir Betexten in dieser Datei jetzt Bereichsüberschriften, Felderlabels und Felderunterschriften - wir brauchen dafür wie auch in der DCA immer eine bestimmte Tabelle dieses DCA Feldes, die in der /Resources/contao/dca/tl_bemod_abteilungen.php erstellt haben. Da für den entsprechenden Backend Bereich immer Modular die gleiche Tabelle verwendet werden sollte, die auch in der gleichnamigen DCA Datei (diese Datei hier sollte auch den selben Namen haben) vorkommen, ist es besser wenn wir diese Tabelle hier zentral benennen. Man wird sehen der $strName kommt in dieser Datei oft vor. Wenn sich der Tabellenname ändern soll müssen wir das hier dann nur einmal konfigurieren.
@@ -15,7 +15,7 @@ $strName = 'tl_bemod_abteilungen';
 // Betextung der neues Element anlegen Operations
 $GLOBALS['TL_LANG'][$strName]['new'] = ['Neue Abteilung erstellen', 'Hier können Sie eine neue Abteilung anlegen'];
 // Betextung der Globalen Operation zurück zu den Ansprechpartnern
-$GLOBALS['TL_LANG'][$strName]['backToAnsprechpartner'] = ['Zu Ansprechpartner zurück', 'Hier können Sie zurück zur Ansprechpartner Verwaltung gelangen'];
+$GLOBALS['TL_LANG'][$strName]['backToAnsprechpartner'] = ['Zum Ansprechpartner Bereich zurück', 'Hier können Sie zurück zur Ansprechpartner Verwaltung gelangen'];
 
 
 // Betextung der Element Bearbeiten Operation (gelber Stift)
