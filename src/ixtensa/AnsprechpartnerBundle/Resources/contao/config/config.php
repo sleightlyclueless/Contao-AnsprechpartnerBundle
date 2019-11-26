@@ -24,12 +24,13 @@
     // Wir wollen DCA Konfigurationen (zusätzliche Felder etc.) anlegen. Dafür benötigen wir eigene Tabellen in denen wir rumhantieren können, für jede Ebene der Erweiterung. Deswegen konfigurieren wir hier das Anlegen von 2 zusätzlichen Tabellen. Eine für das Anlegen der Abteilungen und eine child Tabelle für die jeweiligen Übersetzungen verschiedener Sprachen für die Parent ID
     'tables'            => array('tl_bemod_abteilungen', 'tl_bemod_abteilungen_lang'),
     // hideInNavigation versteckt das dann im Backend - um Dopplungen im Navigationsmenü zu verhindern , denn wir rufen dieses Backend Modul dann über eine Operation in der Ansprechpartner DCA auf und wollen nicht für eine Erweiterung zwei Navigationspunkte erstellen - nicht übersichtlich und abhängig
+    // Manchmal nimmt Contao / Browser / Cache / Composer (???) aus der den hideInNavigation => true nicht. Deswegen wird dieser in /src/ixtensa/AnsprechpartnerBundle/Resources/public/css/be.css noch einmal ausgeblendet
     'hideInNavigation'  => true,
 
     // 'callback'     => 'ClassName',
     // 'key'          => array('Class', 'method'),
     // 'icon'         => 'path/to/icon.gif',
-    // 'stylesheet'   => 'path/to/stylesheet.css',
+    // 'stylesheet'   => '/Resources/public/css/zix_ansprechpartner.css',
     // 'javascript'   => 'path/to/javascript.js'
  );
 // Ansprechpartner – Ansprechpartner als Backend Modul mit den Abteilungen in der Dca als Link integriert und vielen weiteren DCA Feldern konfigurieren und für Frontend Ausgabe vorbereiten
@@ -48,10 +49,11 @@
  // INFOS zu weiteren möglichen Konfigurationen
  // =====================================================================================================================================
 
- // Backend CSS und JS Dateien hinzufügen
- // if (TL_MODE == 'BE') {
- //     $GLOBALS['TL_CSS'][] = 'bundles/ixtensaproductcatalog/css/be.css';
- // }
+// Backend CSS und JS Dateien hinzufügen
+// Manchmal nimmt Contao / Browser / Cache / Composer (???) aus der den hideInNavigation => true nicht. Deswegen wird dieser in /src/ixtensa/AnsprechpartnerBundle/Resources/public/css/be.css noch einmal ausgeblendet
+ if (TL_MODE == 'BE') {
+     $GLOBALS['TL_CSS'][] = 'bundles/ansprechpartner/css/be.css';
+ }
 
 
  // FRONT END MODULES

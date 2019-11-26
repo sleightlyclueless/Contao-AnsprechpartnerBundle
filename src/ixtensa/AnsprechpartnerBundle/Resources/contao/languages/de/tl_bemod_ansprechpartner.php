@@ -6,7 +6,7 @@
  * @license   GNU LGPL 3+
  * @copyright (c) 2019
  */
- 
+
 // Übersetzen und betexten von in der /Resources/contao/dca/tl_bemod_abteilungen.php erstellten DCA Feldern
 
 // Wir Betexten in dieser Datei jetzt Bereichsüberschriften, Felderlabels und Felderunterschriften - wir brauchen dafür wie auch in der DCA immer eine bestimmte Tabelle dieses DCA Feldes, die in der /Resources/contao/dca/tl_bemod_abteilungen.php erstellt haben. Da für den entsprechenden Backend Bereich immer Modular die gleiche Tabelle verwendet werden sollte, die auch in der gleichnamigen DCA Datei (diese Datei hier sollte auch den selben Namen haben) vorkommen, ist es besser wenn wir diese Tabelle hier zentral benennen. Man wird sehen der $strName kommt in dieser Datei oft vor. Wenn sich der Tabellenname ändern soll müssen wir das hier dann nur einmal konfigurieren.
@@ -52,8 +52,9 @@ $GLOBALS['TL_LANG'][$strName]['jobtitle'] = ['Berufsbezeichnung', 'Hier können 
 $GLOBALS['TL_LANG'][$strName]['departementCheckList'] = ['Abteilung', 'Hier müssen Sie mindestens eine Abteilung auswählen, zu der der Ansprechpartner hinzugehört'];
 // $GLOBALS['TL_LANG'][$strName]['department_options'] = ['Leitung', 'Content', 'Grafik', 'Technik'];
 $GLOBALS['TL_LANG'][$strName]['addImage'] = ['Bild hinzufügen', 'Hier können Sie auswählen, ob Sie ein Foto zur Kontaktperson hinzufügen wollen'];
-$GLOBALS['TL_LANG'][$strName]['image'] = ['Bild auswählen', 'Hier können Sie ein Portrait Foto oder ähnliches zur Kontaktperson aus der Dateiverwaltung auswählen und hinzufügen'];
-// $GLOBALS['TL_LANG'][$strName]['imagesize'] = ['Bildgröße', 'Hier können Sie zusätzliche Einstellungen zur Bildgröße / Format machen'];
-// $GLOBALS['TL_LANG'][$strName]['mytrbl'] = ['Eigene Verschiebung', 'Ja ich weiß nicht, hier würden wahrscheinlich eigene Verschiebung mit Pixel Angaben rein kommen.'];
-// $GLOBALS['TL_LANG'][$strName]['myinputunit'] = ['Eigenes Eingabefeld', 'Das hier ist ein eigenes Eingabefeld mit Select-Liste hintendran'];
+$GLOBALS['TL_LANG'][$strName]['singleSRC'] = ['Bild auswählen', 'Hier können Sie ein Portrait Foto oder ähnliches zur Kontaktperson aus der Dateiverwaltung auswählen und hinzufügen'];
+$GLOBALS['TL_LANG'][$strName]['alt'] = ['Alttext', 'Hier können Sie den Alttext des Bildes eingeben'];
+$GLOBALS['TL_LANG'][$strName]['caption'] = ['Caption', 'Hier können Sie eine Caption für das Bild eingeben'];
+$GLOBALS['TL_LANG'][$strName]['resize'] = ['Bildgröße', 'Hier können Sie zusätzliche Einstellungen zur Bildgröße / Format in natürlichen Zahlen eingeben'];
+$GLOBALS['TL_LANG'][$strName]['margin'] = ['Margin', 'Hier können Sie eigene inline margins vergeben.'];
 $GLOBALS['TL_LANG'][$strName]['published'] = ['Ansprechpartner veröffentlichen', 'Setzen Sie hier bitte einen Haken, um den Ansprechpartner zu veröffentlichen'];

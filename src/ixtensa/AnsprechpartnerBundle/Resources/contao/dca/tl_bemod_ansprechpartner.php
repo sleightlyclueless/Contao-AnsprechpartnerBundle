@@ -6,7 +6,7 @@
  * @license   GNU LGPL 3+
  * @copyright (c) 2019
  */
- 
+
 // DCA Erweiterungen: Backend von Contao um Data Container Arrays Erweitern: Zusätzliche Eingabefeleder für verschiedenste Bereiche erstellen und konfigurieren. z.B. Für Backend Module
 // Du bist hier jetzt im Haupt DCA Monster der Erweiterung angekommen. Der zentralen Verwaltung im Backend Modul der Ansprechpartner. Von hier aus gibt es auch einen kreuzverweis zu einem eigenen Widget AbtMenu und querverweis zu dem in der Navigation verstecken Abteilungs Backend Modul
 
@@ -137,7 +137,7 @@ $GLOBALS['TL_DCA'][$strName] = array
     // Subpalettes: Subpalettes sind die Unter - Überschriften, die weitere Elemente beinhalten. In diesem Fall ist 'addImage' eine Checkbox und wenn man diese angehakt hat, sieht man erst das 'image' Feld
 	'subpalettes' => array
 	(
-		'addImage'                    => 'image',
+        'addImage'                    => 'singleSRC,alt,caption,resize,margin',
 	),
 
     // Fields: Jetzt definieren wir alle Felder die für das Element im DCA vorkommen müssen (Meta Fields) und sollen. Ich kann hier z.B. konfigurieren, dass ich ein Textfeld und ein Selectmenü, mit denen ich die Enträge in die Datenbank abspreichere, haben will, damit ich sie dann mit Frontend Templates / Modules ausgeben kann.
@@ -333,9 +333,9 @@ $GLOBALS['TL_DCA'][$strName] = array
 			'sql'                     => "char(1) NOT NULL default ''"
 		),
         // Bild Filetree Element zum hinzufügen von Bildern
-        'image' => array
+        'singleSRC' => array
         (
-            'label'				      => &$GLOBALS['TL_LANG'][$strName]['image'],
+            'label'				      => &$GLOBALS['TL_LANG'][$strName]['singleSRC'],
 			'exclude'			      => true,
 			'search'      		      => false,
 			'sorting'     		      => false,
@@ -347,9 +347,75 @@ $GLOBALS['TL_DCA'][$strName] = array
                                         		'extensions' => 'jpg,png,gif',
                                         		'tl_class'=>'clr'
                                     		),
+            'save_callback'			  => array($strName, 'storeFileMetaInformation'),
+			'load_callback'			  => array($strName, 'setSingleSrcFlags'),
             'sql'       		      => "binary(16) NULL"
 
         ),
+		'alt' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG'][$strName]['alt'],
+            'exclude'			      => true,
+			'search'      		      => false,
+			'sorting'     		      => false,
+			'filter'     		      => false,
+			'inputType'               => 'text',
+			'eval'                    => array(
+                                            'maxlength'=>255,
+                                            'tl_class'=>'w50'
+                                        ),
+			'sql'                     => "varchar(255) NOT NULL default ''"
+		),
+		'caption' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG'][$strName]['caption'],
+            'exclude'			      => true,
+			'search'      		      => false,
+			'sorting'     		      => false,
+			'filter'     		      => false,
+			'inputType'               => 'text',
+			'eval'                    => array(
+                                            'maxlength'=>255,
+                                            'tl_class'=>'w50'
+                                        ),
+			'sql'                     => "varchar(255) NOT NULL default ''"
+		),
+		'resize' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG'][$strName]['resize'],
+            'exclude'			      => true,
+			'search'      		      => false,
+			'sorting'     		      => false,
+			'filter'     		      => false,
+			'inputType'               => 'imageSize',
+            'options'                 => \System::getImageSizes(),
+			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
+			'eval'                    => array(
+                                            'rgxp'=>'natural',
+                                            'includeBlankOption'=>true,
+                                            'nospace'=>true,
+                                            'helpwizard'=>true,
+                                            'tl_class'=>'w50'
+                                        ),
+			'sql'                     => "varchar(64) NOT NULL default ''"
+		),
+		'margin' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG'][$strName]['margin'],
+            'exclude'			      => true,
+			'search'      		      => false,
+			'sorting'     		      => false,
+			'filter'     		      => false,
+			'inputType'               => 'trbl',
+			'options'                 => $GLOBALS['TL_CSS_UNITS'],
+			'eval'                    => array(
+                                            'includeBlankOption'=>true,
+                                            'tl_class'=>'w50'
+                                        ),
+			'sql'                     => "varchar(128) NOT NULL default ''"
+		),
+
+
         // Veröffentlichungs Checkbox, die in die Datenbank eine 1 oder NULL schreibt
         'published' => array
 		(
@@ -544,7 +610,6 @@ class tl_bemod_ansprechpartner extends \Backend
 		}
 
 		$res = serialize($tmp);
-		//var_dump($res); exit;
 
 		return $res;
 	}
@@ -573,4 +638,37 @@ class tl_bemod_ansprechpartner extends \Backend
     	}
     	return $varValue;
     }
+
+
+	public function setSingleSrcFlags($varValue, DataContainer $dc)
+	{
+		if ($dc->activeRecord)
+		{
+			switch ($dc->activeRecord->type)
+			{
+				case 'text':
+				case 'hyperlink':
+				case 'image':
+				case 'accordionSingle':
+					$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = Config::get('validImageTypes');
+					break;
+
+				case 'download':
+					$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = Config::get('allowedDownload');
+					break;
+			}
+		}
+
+		return $varValue;
+	}
+
+	public function storeFileMetaInformation($varValue, DataContainer $dc)
+	{
+		if ($dc->activeRecord->singleSRC != $varValue)
+		{
+			$this->addFileMetaInformationToRequest($varValue, ($dc->activeRecord->ptable ?: 'tl_article'), $dc->activeRecord->pid);
+		}
+
+		return $varValue;
+	}
 }
