@@ -9,9 +9,10 @@
 
 ### How do I get setup? ###
 
-1. Add folder to your installation
-2. Update dependencies
+1. Add src folder (or its contents) to your installation
+2. Insert autoload configuration in the root composer.json -> Update dependencies
 3. Refresh the database
+4. All set!
 
 ### Change log ###
 
