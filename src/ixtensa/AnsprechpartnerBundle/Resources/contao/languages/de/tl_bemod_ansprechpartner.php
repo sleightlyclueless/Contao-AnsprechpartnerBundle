@@ -36,20 +36,22 @@ $GLOBALS['TL_LANG'][$strName]['show'] = ['Informationen zum Ansprechpartner anze
 // Eigene Legenden / Bereichsüberschriften (Palettes in DCA.php) benennen / betexten
 $GLOBALS['TL_LANG'][$strName]['name_legend'] = 'Anrede und Name';
 $GLOBALS['TL_LANG'][$strName]['meta_legend'] = 'Weitere Daten zur Person';
-$GLOBALS['TL_LANG'][$strName]['published_legend'] = 'Element veröffentlichen';
+$GLOBALS['TL_LANG'][$strName]['sorting_legend'] = 'Sortierpriorität';
+$GLOBALS['TL_LANG'][$strName]['published_legend'] = 'Ansprechpartner veröffentlichen';
 
 
 // Eigene Felder (Fields in gleichnamiger DCA.php) benennen / betexten. Es gibt hier immer ein Array Format. An erster Stelle ist die Überschrift, an zweiter Stelle die 'Erklärung', die unter dem Feld steht.
-$GLOBALS['TL_LANG'][$strName]['salutation'] = ['Anrede', 'Hier können Sie die gewünschte Anrede auswählen'];
+$GLOBALS['TL_LANG'][$strName]['salutation'] = ['Anrede', 'Hier können Sie die gewünschte Anrede zu der Kontaktperson auswählen'];
 $GLOBALS['TL_LANG'][$strName]['myselect']['options'] = ['Herr', 'Frau', 'Divers'];
-$GLOBALS['TL_LANG'][$strName]['title'] = ['Titel', 'Hier können Sie falls gewünscht einen oder mehrere Titel der Kontaktperson eingeben'];
+$GLOBALS['TL_LANG'][$strName]['title'] = ['Titel', 'Hier können Sie falls gewünscht einen oder mehrere Titel der Kontaktperson eingeben (z.B. Dipl. Ing.)'];
 $GLOBALS['TL_LANG'][$strName]['name'] = ['Name', 'Geben Sie hier den Familiennamen / Nachnamen des Ansprechpartners ein'];
 $GLOBALS['TL_LANG'][$strName]['firstname'] = ['Vorname', 'Geben Sie hier den Vornamen des Ansprechpartners ein'];
+$GLOBALS['TL_LANG'][$strName]['jobtitle'] = ['Berufsbezeichnung', 'Hier können Sie die Berufsbezeichnung / den Berufsnamen des Ansprechpartners eingeben'];
 $GLOBALS['TL_LANG'][$strName]['email'] = ['E-Mail', 'Hier können Sie eine Mailadresse des Ansprechpartners hinterlegen'];
 $GLOBALS['TL_LANG'][$strName]['phone'] = ['Telefon', 'Hier können Sie eine Telefonnummer des Ansprechpartners hinterlegen'];
-$GLOBALS['TL_LANG'][$strName]['more'] = ['Sonstige Angaben', 'Hier können Sie weitere Angaben zur Person machen'];
-$GLOBALS['TL_LANG'][$strName]['jobtitle'] = ['Berufsbezeichnung', 'Hier können Sie die Berufsbezeichnung / den Berufsnamen des Ansprechpartners eingeben'];
-$GLOBALS['TL_LANG'][$strName]['departementCheckList'] = ['Abteilung', 'Hier müssen Sie mindestens eine Abteilung auswählen, zu der der Ansprechpartner hinzugehört'];
+$GLOBALS['TL_LANG'][$strName]['mobile'] = ['Mobilnummer', 'Hier können Sie eine Mobilnummer des Ansprechpartners hinterlegen'];
+$GLOBALS['TL_LANG'][$strName]['departementCheckList'] = ['Abteilung', 'Hier müssen Sie mindestens eine Abteilung auswählen, zu der der Ansprechpartner hinzugehört. Abteilungen können separat unter Ansprechparnter -> Abteilungen verwalten im oberen Menü der Übersicht angelegt werden'];
+$GLOBALS['TL_LANG'][$strName]['more'] = ['Sonstige Angaben', 'Hier können Sie weitere Angaben zur Person angeben'];
 // $GLOBALS['TL_LANG'][$strName]['department_options'] = ['Leitung', 'Content', 'Grafik', 'Technik'];
 $GLOBALS['TL_LANG'][$strName]['addImage'] = ['Bild hinzufügen', 'Hier können Sie auswählen, ob Sie ein Foto zur Kontaktperson hinzufügen wollen'];
 $GLOBALS['TL_LANG'][$strName]['singleSRC'] = ['Bild auswählen', 'Hier können Sie ein Portrait Foto oder ähnliches zur Kontaktperson aus der Dateiverwaltung auswählen und hinzufügen'];
@@ -57,4 +59,5 @@ $GLOBALS['TL_LANG'][$strName]['alt'] = ['Alttext', 'Hier können Sie den Alttext
 $GLOBALS['TL_LANG'][$strName]['caption'] = ['Caption', 'Hier können Sie eine Caption für das Bild eingeben'];
 $GLOBALS['TL_LANG'][$strName]['resize'] = ['Bildgröße', 'Hier können Sie zusätzliche Einstellungen zur Bildgröße / Format in natürlichen Zahlen eingeben'];
 $GLOBALS['TL_LANG'][$strName]['margin'] = ['Margin', 'Hier können Sie eigene inline margins vergeben.'];
+$GLOBALS['TL_LANG'][$strName]['sortingIndex'] = ['Sortierpriorität festlegen', 'Hier können Sie mit einer natürlichen Zahl die Sortierpriorität des Ansprechpartners angeben. Wenn in einem Modul mehrere Ansprechpartner eingebunden werden, werden Sie absteigend nach diesen Zahlen sortiert. Bei Gleichstand wird der Nachname berücksichtigt'];
 $GLOBALS['TL_LANG'][$strName]['published'] = ['Ansprechpartner veröffentlichen', 'Setzen Sie hier bitte einen Haken, um den Ansprechpartner zu veröffentlichen'];

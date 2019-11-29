@@ -131,7 +131,7 @@ $GLOBALS['TL_DCA'][$strName] = array
 	'palettes' => array
 	(
         '__selector__'                => array('addImage'),
-		'default' => '{name_legend},salutation,title,name,firstname;{meta_legend},email,phone,jobtitle,departementCheckList,more,addImage;{published_legend},published;'
+		'default' => '{name_legend},salutation,title,name,firstname;{meta_legend},jobtitle,email,phone,mobile,departementCheckList,more,addImage;{sorting_legend},sortingIndex;{published_legend},published;'
 	),
 
     // Subpalettes: Subpalettes sind die Unter - Überschriften, die weitere Elemente beinhalten. In diesem Fall ist 'addImage' eine Checkbox und wenn man diese angehakt hat, sieht man erst das 'image' Feld
@@ -229,6 +229,23 @@ $GLOBALS['TL_DCA'][$strName] = array
                                         ),
         	'sql'                     => "varchar(255) NOT NULL default ''"
         ),
+        // Textfeld für Berufsbezeichnung
+        'jobtitle' => array
+        (
+            'label'                   => &$GLOBALS['TL_LANG'][$strName]['jobtitle'],
+        	'exclude'                 => true,
+            'search'                  => true,
+        	'sorting'                 => false,
+			'filter'                  => false,
+        	'inputType'               => 'text',
+        	'eval'                    => array(
+                                            'maxlength'=>255,
+                                            // 'helpwizard'=>true,
+                                            'preserveTags'=>true,
+                                            'tl_class'=>'clr w50'
+                                        ),
+        	'sql'                     => "varchar(255) NOT NULL default ''"
+        ),
         // Textfeld für Email mit überprüfung, ob es eine Mailadresse ist
         'email' => array
         (
@@ -243,7 +260,7 @@ $GLOBALS['TL_DCA'][$strName] = array
                                             'rgxp'=>'email',
                                             'maxlength'=>255,
                                             'decodeEntities'=>true,
-                                            'tl_class'=>'clr w50'
+                                            'tl_class'=>'w50'
                                         ),
         	'sql'                     => "varchar(255) NOT NULL default ''"
         ),
@@ -260,26 +277,26 @@ $GLOBALS['TL_DCA'][$strName] = array
                                             'maxlength'=>64,
                                             'rgxp'=>'phone',
                                             'decodeEntities'=>true,
-                                            'tl_class'=>'w50'
+                                            'tl_class'=>'clr w50'
                                             ),
         	'sql'                     => "varchar(64) NOT NULL default ''"
         ),
-        // Textfeld für Berufsbezeichnung
-        'jobtitle' => array
+        // Textfeld für Mobilnummer mit überprüfung, ob es eine solche ist
+        'mobile' => array
         (
-            'label'                   => &$GLOBALS['TL_LANG'][$strName]['jobtitle'],
+        	'label'                   => &$GLOBALS['TL_LANG'][$strName]['mobile'],
         	'exclude'                 => true,
-            'search'                  => true,
-        	'sorting'                 => false,
+        	'search'                  => false,
+            'sorting'                 => false,
 			'filter'                  => false,
         	'inputType'               => 'text',
         	'eval'                    => array(
-                                            'maxlength'=>255,
-                                            'helpwizard'=>true,
-                                            'preserveTags'=>true,
-                                            'tl_class'=>'clr'
-                                        ),
-        	'sql'                     => "varchar(255) NOT NULL default ''"
+                                            'maxlength'=>64,
+                                            'rgxp'=>'phone',
+                                            'decodeEntities'=>true,
+                                            'tl_class'=>'w50'
+                                            ),
+        	'sql'                     => "varchar(64) NOT NULL default ''"
         ),
         // SONDERFALL:
         // Eigenes Widget Checkbox Menü Feld mit Abteilungen aus Abteilungserweiterung, die in Checklistenformat ausgegeben werden (Dateien: config, tl_bemod_abteilungen, /Widget/Abtmenu.php)
@@ -332,6 +349,21 @@ $GLOBALS['TL_DCA'][$strName] = array
 			'eval'                    => array('submitOnChange'=>true),
 			'sql'                     => "char(1) NOT NULL default ''"
 		),
+        // Sortierpriorität für Module mit mehreren Ansprechpartnern. Nach dieser NATÜRLICHEN ZAHL wird ein ORDER BY DESC gemacht, bei einem Gleichstand gewinnt der Anfangsbuchstabe des Nachnamen alphabetisch
+        'sortingIndex' => array
+        (
+        	'label'                   => &$GLOBALS['TL_LANG'][$strName]['sortingIndex'],
+        	'exclude'                 => true,
+			'search'                  => false,
+			'sorting'                 => false,
+			'filter'                  => false,
+        	'inputType'               => 'text',
+        	'eval'                    => array(
+                                            'maxlength'=>100,
+                                            'rgxp'=>'natural'
+                                        ),
+        	'sql'                     => "int(100) unsigned NOT NULL default '0'"
+        ),
         // Bild Filetree Element zum hinzufügen von Bildern
         'singleSRC' => array
         (
