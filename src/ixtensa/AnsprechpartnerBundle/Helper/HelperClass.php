@@ -121,3 +121,4 @@ class HelperClass extends \Backend
         // Fertig, String mit Kommaliste im FE ausgeben. ("Development, Technik, Yes")
         return $departementsString;
     }
+}
