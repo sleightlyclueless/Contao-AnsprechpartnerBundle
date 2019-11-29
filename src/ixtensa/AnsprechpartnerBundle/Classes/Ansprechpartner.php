@@ -36,7 +36,7 @@ class Ansprechpartner extends \ContentElement
 			// Datenbank abfrage mit den IDs ausführen
             $res = $this->Database->prepare("SELECT * FROM tl_bemod_ansprechpartner WHERE id = ?")->execute($ansprechpartnerId)->fetchAssoc();
 			// Den Namen und Vornamen der Person im Backend Template title ausgeben
-            $this->Template->title = $res['name'] . ' ' . $res['firstname'];
+            $this->Template->title = $res['salutation'] . ' ' . $res['title'] . ' ' . $res['name'] . ' ' . $res['firstname'];
 			// Backend Template parsen und ausgeben
             return $this->Template->parse();
         }
@@ -65,9 +65,13 @@ class Ansprechpartner extends \ContentElement
         $this->Template->name = $res['name']; //Name String
         $this->Template->firstname = $res['firstname']; //Vorname String
         $this->Template->jobtitle = $res['jobtitle']; //Jobtitel String
-        $this->Template->phone = $res['phone']; //Telefonnummer String
-        $this->Template->mobile = $res['mobile']; //Telefonnummer String
         $this->Template->email = $res['email']; //Email String
+        $this->Template->emailLinktext = $res['emailLinktext']; //Emaillinktext String
+        $this->Template->phone = preg_replace('/\s+/', '', $res['phone']); //Telefonnummer String ohne Whitespaces
+        $this->Template->phoneLinktext = $res['phoneLinktext']; //Telefonlinktext String
+        $this->Template->mobile = preg_replace('/\s+/', '', $res['mobile']); //Telefonnummer String
+        $this->Template->mobileLinktext = $res['mobileLinktext']; //Mobilelinktext String
+        $this->Template->fax = $res['fax']; //Faxnummer String
         $this->Template->more = $res['more']; //Textarea weitere Informationen String
         $this->Template->published = $res['published']; //NULL oder 1 für published Checkbox
 

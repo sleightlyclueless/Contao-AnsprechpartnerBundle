@@ -1,64 +1,65 @@
-<div class="ce_ix_ansprechpartner <?php echo $this->class; ?> grid-container block columns small-12">
-    <!-- Sehen Sie Ihren Ansprechpartner nicht? Vielleicht ist er in der Verwaltungsoberfläche oder dem Artikel selbst ausgeblendet?-->
-    <?php if($this->published): ?>
-        <div itemscope itemtype="http://schema.org/Person" class="ce_ix_ansprechpartner_wrapper">
-            <?php if($this->addImage): ?>
-            	<div class="ce_ix_ansprechpartner_image">
-            		<figure class="image_container" <?php if ($this->margin): ?> style="<?= trim($this->margin); ?>"<?php endif; ?>>
+<!-- Sehen Sie Ihren Ansprechpartner nicht? Vielleicht ist er in der Verwaltungsoberfläche oder dem Artikel selbst ausgeblendet?-->
+<?php if($this->published): ?>
+    <div itemscope itemtype="http://schema.org/Person" class="ce_ix_ansprechpartner <?php echo $this->class; ?> grid-container block columns small-12">
+        <?php if($this->addImage): ?>
+        	<div class="image">
+        		<figure class="image_container" <?php if ($this->margin): ?> style="<?= trim($this->margin); ?>"<?php endif; ?>>
 
-                    <?php if ($this->resizePath): ?>
-                        <img itemprop="image" src="<?= $this->resizePath ?>" alt="<?= $this->alt ?>" />
-                    <?php else: ?>
-                        <img itemprop="image" src="<?= $this->path ?>" alt="<?= $this->alt ?>" />
-                    <?php endif; ?>
-
-            		<?php if ($this->caption): ?>
-            		    <figcaption class="caption"><?= $this->caption ?></figcaption>
-            		<?php endif; ?>
-            		</figure>
-            	</div>
-        	<?php endif; ?>
-
-            <div class="ce_ix_ansprechpartner_content">
-                <?php if($this->firstname && $this->name): ?>
-        		    <p class="ce_ix_ansprechpartner_salutation">
-                        <?php if($this->salutation): ?>
-                            <span itemprop="honorificPrefix"><?= $this->salutation . ' '?></span>
-                        <?php endif; ?>
-                        <?php if($this->title): ?>
-                            <span itemprop="honorificSuffix"><?= $this->title . ' '?></span>
-                        <?php endif; ?>
-                        <span itemprop="givenName"><?= $this->firstname . ' '?></span>
-                        <span itemprop="familyName"><?= $this->name?></span>
-                    </p>
+                <?php if ($this->resizePath): ?>
+                    <img itemprop="image" src="<?= $this->resizePath ?>" alt="<?= $this->alt ?>" />
+                <?php else: ?>
+                    <img itemprop="image" src="<?= $this->path ?>" alt="<?= $this->alt ?>" />
                 <?php endif; ?>
-                <?php if($this->jobtitle): ?>
-                    <p class="ce_ix_ansprechpartner_jobtitle">
-                        <span itemprop="jobTitle"><?= $this->jobtitle ?></span>
-                    </p>
+
+        		<?php if ($this->caption): ?>
+        		    <figcaption class="caption"><?= $this->caption ?></figcaption>
         		<?php endif; ?>
-                <?php if($this->phone): ?>
-        			<p class="ce_ix_ansprechpartner_tel">
-                        <span itemprop="telephone"><?= $this->phone ?></span>
-                    </p>
-        		<?php endif; ?>
-                <?php if($this->mobile): ?>
-        			<p class="ce_ix_ansprechpartner_mobile">
-                        <span itemprop="telephone"><?= $this->mobile ?></span>
-                    </p>
-        		<?php endif; ?>
-                <?php if($this->email): ?>
-                    <p class="ce_ix_ansprechpartner_email">
-                        <a itemprop="email" href="mailto:<?= $this->email ?>"><?= $this->email ?></a>
-                    </p>
-        		<?php endif; ?>
-                <?php if($this->departementCheckListReader): ?>
-                    <p itemprop="department" class="ce_ix_ansprechpartner_departements"><?= $this->departementCheckListReader ?></p>
-        		<?php endif; ?>
-                <?php if($this->more): ?>
-        			<div class="ce_ix_ansprechpartner_more"><?= $this->more ?></div>
-        		<?php endif; ?>
-            </div>
+        		</figure>
+        	</div>
+    	<?php endif; ?>
+
+        <div class="content">
+            <?php if($this->firstname && $this->name): ?>
+    		    <p class="salutation">
+                    <?php if($this->salutation): ?>
+                        <span itemprop="honorificPrefix"><?= $this->salutation . ' '?></span>
+                    <?php endif; ?>
+                    <?php if($this->title): ?>
+                        <span itemprop="honorificSuffix"><?= $this->title . ' '?></span>
+                    <?php endif; ?>
+                    <span itemprop="givenName"><?= $this->firstname . ' '?></span>
+                    <span itemprop="familyName"><?= $this->name?></span>
+                </p>
+            <?php endif; ?>
+            <?php if($this->jobtitle): ?>
+                <p class="jobtitle">
+                    <span itemprop="jobTitle"><?= $this->jobtitle ?></span>
+                </p>
+    		<?php endif; ?>
+            <?php if($this->phone): ?>
+    			<p class="phone">
+                    <a itemprop="telephone" href="tel:<?= $this->phone ?>"><?php if($this->phoneLinktext): ?><?= $this->phoneLinktext ?><?php else: ?><?= $this->phone ?><?php endif; ?></a>
+                </p>
+    		<?php endif; ?>
+            <?php if($this->mobile): ?>
+    			<p class="mobile">
+                    <a itemprop="telephone" href="tel:<?= $this->mobile ?>"><?php if($this->mobileLinktext): ?><?= $this->mobileLinktext ?><?php else: ?><?= $this->mobile ?><?php endif; ?></a>
+                </p>
+    		<?php endif; ?>
+            <?php if($this->fax): ?>
+    			<p class="fax"><?= $this->fax ?></p>
+    		<?php endif; ?>
+            <?php if($this->email): ?>
+                <p class="email">
+                    <a itemprop="email" href="mailto:<?= $this->email ?>"><?php if($this->emailLinktext): ?><?= $this->emailLinktext ?><?php else: ?><?= $this->email ?><?php endif; ?></a>
+                </p>
+    		<?php endif; ?>
+            <?php if($this->departementCheckListReader): ?>
+                <p itemprop="department" class="departements"><?= $this->departementCheckListReader ?></p>
+    		<?php endif; ?>
+            <?php if($this->more): ?>
+    			<div class="more"><?= $this->more ?></div>
+    		<?php endif; ?>
         </div>
-    <?php endif; ?>
-</div>
+    </div>
+<?php endif; ?>

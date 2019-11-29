@@ -131,7 +131,7 @@ $GLOBALS['TL_DCA'][$strName] = array
 	'palettes' => array
 	(
         '__selector__'                => array('addImage'),
-		'default' => '{name_legend},salutation,title,name,firstname;{meta_legend},jobtitle,email,phone,mobile,departementCheckList,more,addImage;{sorting_legend},sortingIndex;{published_legend},published;'
+		'default' => '{name_legend},salutation,title,name,firstname;{meta_legend},jobtitle,email,emailLinktext,phone,phoneLinktext,mobile,mobileLinktext,fax,departementCheckList,more,addImage;{sorting_legend},sortingIndex;{published_legend},published;'
 	),
 
     // Subpalettes: Subpalettes sind die Unter - Überschriften, die weitere Elemente beinhalten. In diesem Fall ist 'addImage' eine Checkbox und wenn man diese angehakt hat, sieht man erst das 'image' Feld
@@ -242,7 +242,7 @@ $GLOBALS['TL_DCA'][$strName] = array
                                             'maxlength'=>255,
                                             // 'helpwizard'=>true,
                                             'preserveTags'=>true,
-                                            'tl_class'=>'clr w50'
+                                            'tl_class'=>'clr'
                                         ),
         	'sql'                     => "varchar(255) NOT NULL default ''"
         ),
@@ -260,6 +260,22 @@ $GLOBALS['TL_DCA'][$strName] = array
                                             'rgxp'=>'email',
                                             'maxlength'=>255,
                                             'decodeEntities'=>true,
+                                            'tl_class'=>'clr w50'
+                                        ),
+        	'sql'                     => "varchar(255) NOT NULL default ''"
+        ),
+        // Textfeld für Email Links
+        'emailLinktext' => array
+        (
+            'label'                   => &$GLOBALS['TL_LANG'][$strName]['emailLinktext'],
+        	'exclude'                 => true,
+            'search'                  => true,
+        	'sorting'                 => false,
+			'filter'                  => false,
+        	'inputType'               => 'text',
+        	'eval'                    => array(
+                                            'maxlength'=>255,
+                                            'preserveTags'=>true,
                                             'tl_class'=>'w50'
                                         ),
         	'sql'                     => "varchar(255) NOT NULL default ''"
@@ -281,6 +297,22 @@ $GLOBALS['TL_DCA'][$strName] = array
                                             ),
         	'sql'                     => "varchar(64) NOT NULL default ''"
         ),
+        // Textfeld für Telefonlinktext
+        'phoneLinktext' => array
+        (
+            'label'                   => &$GLOBALS['TL_LANG'][$strName]['phoneLinktext'],
+        	'exclude'                 => true,
+            'search'                  => true,
+        	'sorting'                 => false,
+			'filter'                  => false,
+        	'inputType'               => 'text',
+        	'eval'                    => array(
+                                            'maxlength'=>255,
+                                            'preserveTags'=>true,
+                                            'tl_class'=>'w50'
+                                        ),
+        	'sql'                     => "varchar(255) NOT NULL default ''"
+        ),
         // Textfeld für Mobilnummer mit überprüfung, ob es eine solche ist
         'mobile' => array
         (
@@ -294,7 +326,40 @@ $GLOBALS['TL_DCA'][$strName] = array
                                             'maxlength'=>64,
                                             'rgxp'=>'phone',
                                             'decodeEntities'=>true,
+                                            'tl_class'=>'clr w50'
+                                            ),
+        	'sql'                     => "varchar(64) NOT NULL default ''"
+        ),
+        // Textfeld für Handylinktext
+        'mobileLinktext' => array
+        (
+            'label'                   => &$GLOBALS['TL_LANG'][$strName]['mobileLinktext'],
+        	'exclude'                 => true,
+            'search'                  => true,
+        	'sorting'                 => false,
+			'filter'                  => false,
+        	'inputType'               => 'text',
+        	'eval'                    => array(
+                                            'maxlength'=>255,
+                                            'preserveTags'=>true,
                                             'tl_class'=>'w50'
+                                        ),
+        	'sql'                     => "varchar(255) NOT NULL default ''"
+        ),
+        // Textfeld für Mobilnummer mit überprüfung, ob es eine solche ist
+        'fax' => array
+        (
+        	'label'                   => &$GLOBALS['TL_LANG'][$strName]['fax'],
+        	'exclude'                 => true,
+        	'search'                  => false,
+            'sorting'                 => false,
+			'filter'                  => false,
+        	'inputType'               => 'text',
+        	'eval'                    => array(
+                                            'maxlength'=>64,
+                                            'rgxp'=>'phone',
+                                            'decodeEntities'=>true,
+                                            'tl_class'=>'clr w50'
                                             ),
         	'sql'                     => "varchar(64) NOT NULL default ''"
         ),
@@ -360,7 +425,8 @@ $GLOBALS['TL_DCA'][$strName] = array
         	'inputType'               => 'text',
         	'eval'                    => array(
                                             'maxlength'=>100,
-                                            'rgxp'=>'natural'
+                                            'rgxp'=>'natural',
+                                            'tl_class'=>'w50'
                                         ),
         	'sql'                     => "int(100) unsigned NOT NULL default '0'"
         ),
@@ -653,7 +719,7 @@ class tl_bemod_ansprechpartner extends \Backend
     	$data = unserialize($varValue);
 
     	if (isset($data)) {
-    		$this->Database->prepare("DELETE FROM tl_bemod_abteilungen WHERE id = $abtId")->execute();
+    		$this->Database->prepare("DELETE FROM tl_bemod_abteilungen WHERE id = ?")->execute($abtId);
     		foreach ($data as $value) {
 
     			$arrData = array(
@@ -672,6 +738,7 @@ class tl_bemod_ansprechpartner extends \Backend
     }
 
 
+    // singleSRC / Image Function
 	public function setSingleSrcFlags($varValue, DataContainer $dc)
 	{
 		if ($dc->activeRecord)
@@ -693,7 +760,7 @@ class tl_bemod_ansprechpartner extends \Backend
 
 		return $varValue;
 	}
-
+    // singleSRC / Image Function
 	public function storeFileMetaInformation($varValue, DataContainer $dc)
 	{
 		if ($dc->activeRecord->singleSRC != $varValue)

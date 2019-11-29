@@ -6,7 +6,7 @@
  * @license   GNU LGPL 3+
  * @copyright (c) 2019
  */
- 
+
 // DCA Erweiterungen: Backend von Contao um Data Container Arrays Erweitern: Zusätzliche Eingabefeleder für verschiedenste Bereiche erstellen und konfigurieren. z.B. Für Backend Module
 
 // Namespace: Der eindeutige Pfad, der auf diese entsprechende PHP Datei zeigt, damit sie von anderen Orten aus eindeutig aufgerufen und oder referenziert werden kann.
@@ -24,7 +24,7 @@ $GLOBALS['TL_DCA'][$strName]['list']['operations']['toggle']['button_callback'] 
 $GLOBALS['TL_DCA'][$strName]['list']['sorting']['headerFields'] = array('title', 'tstamp', 'language');
 
 // Paletten für unser spezielles Inhaltselement unter dem Namen 'ansprechpartner_einzeln' werden nun um folgende Felder erweitert. Viele Felder und Legends hiervon gab es bereits und sie wurden anhand vorheriger Elemente entsprechend wieder verwendet.
-$GLOBALS['TL_DCA'][$strName]['palettes']['ansprechpartner_einzeln'] =  '{type_legend},type;{headline_legend},headline;{contactPerson_legend},ansprechpartnerpicker;{expert_legend:hide},guests,cssID;{grid_legend},grid_columns,grid_options;{invisible_legend:hide},invisible,start,stop;';
+$GLOBALS['TL_DCA'][$strName]['palettes']['ansprechpartner_einzeln'] =  '{type_legend},type;{contactPerson_legend},ansprechpartnerpicker;{expert_legend:hide},guests,cssID;{grid_legend},grid_columns,grid_options;{invisible_legend:hide},invisible,start,stop;';
 
 // Unser Element vom Typ 'AnsprechpartnerPicker' erlaubt es uns über unser eigenes Widget per select Menü einen einzigen der erstellten Ansprechpartner an dieser Stelle einzufügen. Dieses Select Menü nimmt sich aus der Datenbank aller erstellten Ansprechpartner im Backend Modul die Namen und Listet diese in einem Auswahlmenü auf. Das Widget wurde unter /Widget/AnsprechpartnerPicker.php erstellt und konfiguriert. Hier wird es entsprechend verwendet.
 $GLOBALS['TL_DCA'][$strName]['fields']['ansprechpartnerpicker'] = array
@@ -35,9 +35,10 @@ $GLOBALS['TL_DCA'][$strName]['fields']['ansprechpartnerpicker'] = array
     'sorting'                 => true,
     'flag'                    => 1,
     'inputType'               => 'AnsprechpartnerPicker',
-    'foreignKey'              => 'tl_bemod_ansprechpartner.CONCAT(name," | ",firstname)',
+    'foreignKey'              => 'tl_bemod_ansprechpartner.CONCAT(salutation," ",title," ",firstname," ",name)',
     'eval'                    => array('multiple'=>false),
-    // 'sql'                     => "varchar(255) NOT NULL default ''"
+    // 'save_callback'			  => array($strName, 'saveAnsprechpartner'),
+    // 'load_callback'			  => array($strName, 'getAnsprechpartner'),
     'sql'                     => "blob NULL"
 );
 
@@ -160,4 +161,48 @@ class tl_content_ansprechpartner extends \Backend
 
 		$objVersions->create();
 	}
+
+
+
+
+    // public function getAnsprechpartner() {
+	// 	$tmp = array();
+	// 	$query = $this->Database->prepare("SELECT * FROM tl_bemod_ansprechpartner WHERE published = 1")->execute($abtId);
+    //
+	// 	$res = $query->fetchAllAssoc();
+    //
+	// 	foreach ($res as $key => $value) {
+	// 		$tmp[] = $value['id'];
+	// 	}
+    //
+	// 	$res = serialize($tmp);
+    //
+	// 	return $res;
+	// }
+
+
+
+    // public function saveAnsprechpartner($varValue, DataContainer $dc)
+    // {
+    //     $abtId = $dc->id;
+    // 	$data = unserialize($varValue);
+    //
+    // 	if (isset($data)) {
+    // 		$this->Database->prepare("DELETE FROM tl_bemod_ansprechpartner WHERE id = ?")->execute($abtId);
+    // 		foreach ($data as $value) {
+    //
+    // 			$arrData = array(
+    // 				'tstamp'		=> time(),
+    // 				'id'			=> $dc->id,
+    // 				'abtname'		=> $value
+    // 			);
+    //
+	// 			$this->Database->prepare("INSERT INTO tl_bemod_ansprechpartner %s")
+	// 				->set($arrData)
+	// 				->execute();
+    //
+    // 		}
+    // 	}
+    // 	return $varValue;
+    // }
 }

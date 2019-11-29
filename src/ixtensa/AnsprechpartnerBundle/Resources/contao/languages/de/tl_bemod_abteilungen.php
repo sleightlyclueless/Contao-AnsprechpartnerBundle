@@ -15,7 +15,7 @@ $strName = 'tl_bemod_abteilungen';
 // Betextung der neues Element anlegen Operations
 $GLOBALS['TL_LANG'][$strName]['new'] = ['Neue Abteilung erstellen', 'Hier können Sie eine neue Abteilung anlegen'];
 // Betextung der Globalen Operation zurück zu den Ansprechpartnern
-$GLOBALS['TL_LANG'][$strName]['backToAnsprechpartner'] = ['Zum Ansprechpartnerbereich zurück', 'Hier können Sie zurück zur Ansprechpartner Verwaltung gelangen'];
+$GLOBALS['TL_LANG'][$strName]['backToAnsprechpartner'] = ['Zurück', 'Hier können Sie zurück zur Ansprechpartner Verwaltung gelangen'];
 
 
 // Betextung der Element Bearbeiten Operation (gelber Stift)
