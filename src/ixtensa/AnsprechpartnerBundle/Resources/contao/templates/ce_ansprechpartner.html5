@@ -1,56 +1,48 @@
-<div class="ansprechpartner <?php echo $this->class; ?> grid-container block columns small-12">
+<div class="ce_ix_ansprechpartner <?php echo $this->class; ?> grid-container block columns small-12">
     <!-- Sehen Sie Ihren Ansprechpartner nicht? Vielleicht ist er in der Verwaltungsoberfläche oder dem Artikel selbst ausgeblendet?-->
     <?php if($this->published): ?>
-        <div class="ce_ix_ansprechpartner">
-            <div class="ce_ix_ansprechpartner_wrapper">
+        <div class="ce_ix_ansprechpartner_wrapper">
+            <?php if($this->addImage): ?>
+            	<div class="ce_ix_ansprechpartner_image">
+            		<figure class="image_container" <?php if ($this->margin): ?> style="<?= trim($this->margin); ?>"<?php endif; ?>>
 
-                <?php if($this->addImage): ?>
-                	<div class="ce_ix_ansprechpartner_image">
-
-                		<figure class="image_container" <?php if ($this->margin): ?> style="<?= trim($this->margin); ?>"<?php endif; ?>>
-
-                        <?php if ($this->resizePath): ?>
-                            <img src="<?= $this->resizePath ?>" alt="<?= $this->alt ?>" />
-                        <?php else: ?>
-                            <img src="<?= $this->path ?>" alt="<?= $this->alt ?>" />
-                        <?php endif; ?>
-
-                		<?php if ($this->caption): ?>
-                		    <figcaption class="caption"><?= $this->caption ?></figcaption>
-                		<?php endif; ?>
-                		</figure>
-
-                	</div>
-            	<?php endif; ?>
-
-                <div class="ce_ix_ansprechpartner_content">
-                    <?php if($this->firstname && $this->name): ?>
-            		    <p class="ce_ix_ansprechpartner_salutation">
-                        <b>Anrede: </b><?= $this->salutation . ' ' . $this->title . ' ' . $this->firstname . ' ' . $this->name?></p>
+                    <?php if ($this->resizePath): ?>
+                        <img src="<?= $this->resizePath ?>" alt="<?= $this->alt ?>" />
+                    <?php else: ?>
+                        <img src="<?= $this->path ?>" alt="<?= $this->alt ?>" />
                     <?php endif; ?>
-                    <?php if($this->jobtitle): ?>
-                        <p class="ce_ix_ansprechpartner_jobtitle">
-                        <b>Tätigkeit: </b><?= $this->jobtitle ?></p>
+
+            		<?php if ($this->caption): ?>
+            		    <figcaption class="caption"><?= $this->caption ?></figcaption>
             		<?php endif; ?>
-                    <?php if($this->phone): ?>
-            			<p class="ce_ix_ansprechpartner_tel">
-                        <b>Telefonnummer: </b><?= $this->phone ?></p>
-            		<?php endif; ?>
-                    <?php if($this->email): ?>
-                        <p class="ce_ix_ansprechpartner_email">
-                            <b>Mailadresse: </b>
-                            <a href="mailto:<?= $this->email ?>"><?= $this->email ?></a>
-                        </p>
-            		<?php endif; ?>
-                    <?php if($this->departementCheckListReader): ?>
-                        <p class="ce_ix_ansprechpartner_departements">
-                        <b>Zugehörige Abteilungen: </b><?= $this->departementCheckListReader ?></p>
-            		<?php endif; ?>
-                    <?php if($this->more): ?>
-            			<div class="ce_ix_ansprechpartner_more">
-                        <b>Weitere Angaben: </b><?= $this->more ?></div>
-            		<?php endif; ?>
-                </div>
+            		</figure>
+            	</div>
+        	<?php endif; ?>
+
+            <div class="ce_ix_ansprechpartner_content">
+                <?php if($this->firstname && $this->name): ?>
+        		    <p class="ce_ix_ansprechpartner_salutation"><?php if($this->salutation): ?><?= $this->salutation . ' '?><?php endif; ?><?php if($this->title): ?><?= $this->title . ' '?><?php endif; ?><?= $this->firstname . ' ' . $this->name?></p>
+                <?php endif; ?>
+                <?php if($this->jobtitle): ?>
+                    <p class="ce_ix_ansprechpartner_jobtitle"><?= $this->jobtitle ?></p>
+        		<?php endif; ?>
+                <?php if($this->phone): ?>
+        			<p class="ce_ix_ansprechpartner_tel"><?= $this->phone ?></p>
+        		<?php endif; ?>
+                <?php if($this->mobile): ?>
+        			<p class="ce_ix_ansprechpartner_mobile"><?= $this->mobile ?></p>
+        		<?php endif; ?>
+                <?php if($this->email): ?>
+                    <p class="ce_ix_ansprechpartner_email">
+                        <a href="mailto:<?= $this->email ?>"><?= $this->email ?></a>
+                    </p>
+        		<?php endif; ?>
+                <?php if($this->departementCheckListReader): ?>
+                    <p class="ce_ix_ansprechpartner_departements"><?= $this->departementCheckListReader ?></p>
+        		<?php endif; ?>
+                <?php if($this->more): ?>
+        			<div class="ce_ix_ansprechpartner_more"><?= $this->more ?></div>
+        		<?php endif; ?>
             </div>
         </div>
     <?php endif; ?>

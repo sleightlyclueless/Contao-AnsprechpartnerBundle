@@ -66,20 +66,20 @@ class Ansprechpartner extends \ContentElement
         $this->Template->firstname = $res['firstname']; //Vorname String
         $this->Template->jobtitle = $res['jobtitle']; //Jobtitel String
         $this->Template->phone = $res['phone']; //Telefonnummer String
+        $this->Template->mobile = $res['mobile']; //Telefonnummer String
         $this->Template->email = $res['email']; //Email String
         $this->Template->more = $res['more']; //Textarea weitere Informationen String
         $this->Template->published = $res['published']; //NULL oder 1 für published Checkbox
 
-        $contents = HelperClass::getDepartementIds($res['departementCheckList']); //Array mit IDs von tl_bemod_abteilungen (pids von tl_bemod_abteilungen_lang)
-        $departementsString = HelperClass::queryDepartementNames($contents);
-        //String mit Kommagetrennten Abteilungsnamen aus der tl_bemod_abteilungen_lang Tabelle
+        //HelperClass Funktionen sind separate Funktionen unter /AnsprechpartnerBundle/Helper/HelperClass.php. Solche Funktionen werden ausgelagert wenn sie separat öfters von mehreren Klassen genutzt werden oder um den Code übersichtlicher zu halten.
+        $departementsIDs = HelperClass::getDepartementIds($res['departementCheckList']); //Array mit IDs von den ausgewählten Abteilungen im Picker unter tl_bemod_abteilungen (pids von tl_bemod_abteilungen_lang)
+        $departementsString = HelperClass::queryDepartementNames($departementsIDs); //String mit Kommagetrennten Abteilungsnamen aus der tl_bemod_abteilungen_lang Tabelle
         $this->Template->departementCheckListReader = $departementsString;
 
         // Ein Bild wird nicht als Pfad direkt abgespeichert, sondern per UUID. Diese haben den Vorteil, dass die Datei verschoben werden kann und immer noch diese ID besitzt, man das Bild dadurch also nicht verliert im Frontend und der Datenbankzuweisung. Nachteil ist, dass wir hier noch ein bisschen proccessing machen müssen, um den Pfad wieder rauszubekommen
         // In diesem Feld wurde in einer Checkbox angehakt / abgefragt, ob ein Bild hinzugefügt werden soll.
         // Ein Objekt für das Bild erstellen anhand der UUID (findet Pfad vom Bild, sowie weitere Meta infos)
         $objFile = \FilesModel::findByUuid($res['singleSRC']);
-
         // Pfad zum Bild in der Variable $path ablegen, wenn das Bild existiert
         if($objFile) {
             $path = $objFile->path;
@@ -100,8 +100,9 @@ class Ansprechpartner extends \ContentElement
         $this->Template->resizePath = $src;
         // Die 4 Eingabefelder "margin" aus dem DCA werden hier über generateMargin und deserialize Funktion in inline CSS Format umgewandelt und im Template dann weiter- und ausgegeben
         $margin = $this->generateMargin(deserialize($res['margin']), 'margin');
+        // Und ab weiter zum Template damit
         $this->Template->margin = $margin;
 
-		// Das wars. Die ganzen Daten aus dem Backend stehen jetzt bereit für das Frontend Template. Der Rest und die Ausgabe passieren für diese(s) Element(e) nun unter /Resources/contao/templates/ce_ansprechpartner.html5 oder den individuellen Templates
+		// Das wars. Die ganzen Daten aus dem Backend stehen jetzt bereit für das Frontend Template. Der Rest und die Ausgabe passieren für diese(s) Element(e) nun unter /Resources/contao/templates/ce_ansprechpartner.html5 oder deinen individuellen Templates
     }
 }
