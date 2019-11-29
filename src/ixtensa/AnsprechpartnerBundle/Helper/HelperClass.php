@@ -72,6 +72,7 @@ class HelperClass extends \Backend
         $pidQuery = "pid IN(";
         // Das Array mit den IDs (z.B. Array ( [0] => 7 [1] => 9 [2] => 4 )) durchlaufen wir jetzt so oft, bis wir kein neues Element mehr 'poppen', also abhängen können -> Bis das Array leer ist
         // Für jeden gefunden Eintrag unter IDs erweitern wir die SQL Query um eine WHERE Klausel mit OR, damit bei mehreren PIDs mehrere Einträge ausgegeben werden.
+        // TODO Mit foreach Schleife umschreiben
         for ($counter=0; $counter < $maxAbteilungen; $counter++) {
             // Abhängen letztes Element
             $currentId = array_pop($arrIds);
@@ -108,6 +109,7 @@ class HelperClass extends \Backend
 
         // String aus Array aufbereiten
         $departementsString = "";
+        // TODO Mit foreach Schleife umschreiben
         for ($counter=0; $counter < $maxAbteilungen; $counter++) {
             $departementName = $fetchRes[$counter]['abtname_bez'];
             if (!empty($departementName)) {
