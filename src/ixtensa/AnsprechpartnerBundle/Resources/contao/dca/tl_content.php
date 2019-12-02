@@ -12,6 +12,7 @@
 // Namespace: Der eindeutige Pfad, der auf diese entsprechende PHP Datei zeigt, damit sie von anderen Orten aus eindeutig aufgerufen und oder referenziert werden kann.
 namespace ixtensa\AnsprechpartnerBundle\dca\tl_content;
 
+use \ixtensa\AnsprechpartnerBundle\Widget\AbtMenu;
 // Wir brauchen unser Widget AnsprechpartnerPicker für dieses DCA, das wir in der entsprechenden /Widget/Ansprechpartnerpicker.php erstellt und konfiguriert haben. Wir holen uns es also per Namespace hier zum verwenden
 use \ixtensa\AnsprechpartnerBundle\Widget\AnsprechpartnerPicker;
 
@@ -24,7 +25,40 @@ $GLOBALS['TL_DCA'][$strName]['list']['operations']['toggle']['button_callback'] 
 $GLOBALS['TL_DCA'][$strName]['list']['sorting']['headerFields'] = array('title', 'tstamp', 'language');
 
 // Paletten für unser spezielles Inhaltselement unter dem Namen 'ansprechpartner_einzeln' werden nun um folgende Felder erweitert. Viele Felder und Legends hiervon gab es bereits und sie wurden anhand vorheriger Elemente entsprechend wieder verwendet.
-$GLOBALS['TL_DCA'][$strName]['palettes']['ansprechpartner_einzeln'] =  '{type_legend},type;{contactPerson_legend},ansprechpartnerpicker;{expert_legend:hide},guests,cssID;{grid_legend},grid_columns,grid_options;{invisible_legend:hide},invisible,start,stop;';
+
+$GLOBALS['TL_DCA'][$strName]['palettes'] = array
+(
+    '__selector__'                => array('ansprechpartnerType'),
+    'default'                     => '{type_legend},type;{contactPerson_legend},ansprechpartnerType,ansprechpartnerpicker;',
+    'Einzeln'                      => '{type_legend},type;{contactPerson_legend},ansprechpartnerType,ansprechpartnerpicker;{expert_legend:hide},guests,cssID;{grid_legend},grid_columns,grid_options;{invisible_legend:hide},invisible,start,stop;',
+    'Individuell'                  => '{type_legend},type;{contactPerson_legend},ansprechpartnerType,ansprechpartnercheckboxes;{expert_legend:hide},guests,cssID;{grid_legend},grid_columns,grid_options;{invisible_legend:hide},invisible,start,stop;',
+    'Abteilungen'                       => '{type_legend},type;{contactPerson_legend},ansprechpartnerType,departementcheckboxes;{expert_legend:hide},guests,cssID;{grid_legend},grid_columns,grid_options;{invisible_legend:hide},invisible,start,stop;',
+    'Alle'                         => '{type_legend},type;{contactPerson_legend},ansprechpartnerType;{expert_legend:hide},guests,cssID;{grid_legend},grid_columns,grid_options;{invisible_legend:hide},invisible,start,stop;'
+);
+
+$GLOBALS['TL_DCA'][$strName]['fields']['ansprechpartnerType'] = array
+(
+    'label'                   => &$GLOBALS['TL_LANG'][$strName]['ansprechpartnerType'],
+    'exclude'                 => true,
+    'search'                  => true,
+    'sorting'                 => true,
+    'filter'                  => true,
+    'flag'                    => 1,
+    'inputType'               => 'select',
+    'options'                 => $GLOBALS['TL_LANG'][$strName]['ansprechpartnerType']['options'],
+    'eval'                    => array(
+                                    'feEditable'=>true,
+                                    'feViewable'=>true,
+                                    'feGroup'=>'qualifications',
+                                    'includeBlankOption'=>true,
+                                    'mandatory'=>true,
+                                    'tl_class'=>'clr'
+                                ),
+    // Es handelt sich hier um ein eigenes Widget. Um auch in der Datenbank übernehmen zu können, was wir eingegeben haben, damit das nicht wieder vergessen wird, müssen wir callback Funktionen für Speichern dieser Felder und Laden dieser Felder anlegen. Die Funktionen, die die Daten dann in Datenbnak und Contao abspeichern kommen ganz unten in DIESER Datei unter den Fieldconfigurations
+    // 'save_callback'			  => array($strName, 'saveAbteilungen'),
+    // 'load_callback'			  => array($strName, 'getSelectedAbteilungen'),
+    'sql'                     => "blob NULL"
+);
 
 // Unser Element vom Typ 'AnsprechpartnerPicker' erlaubt es uns über unser eigenes Widget per select Menü einen einzigen der erstellten Ansprechpartner an dieser Stelle einzufügen. Dieses Select Menü nimmt sich aus der Datenbank aller erstellten Ansprechpartner im Backend Modul die Namen und Listet diese in einem Auswahlmenü auf. Das Widget wurde unter /Widget/AnsprechpartnerPicker.php erstellt und konfiguriert. Hier wird es entsprechend verwendet.
 $GLOBALS['TL_DCA'][$strName]['fields']['ansprechpartnerpicker'] = array
@@ -40,6 +74,55 @@ $GLOBALS['TL_DCA'][$strName]['fields']['ansprechpartnerpicker'] = array
     'options_callback'			  => array('ixtensa\AnsprechpartnerBundle\dca\tl_content\tl_content_ansprechpartner', 'getAnsprechpartner'),
     'sql'                     => "blob NULL"
 );
+
+$GLOBALS['TL_DCA'][$strName]['fields']['ansprechpartnercheckboxes'] = array
+(
+    'label'                   => &$GLOBALS['TL_LANG'][$strName]['ansprechpartnercheckboxes'],
+    'exclude'                 => true,
+    'search'                  => true,
+    'sorting'                 => true,
+    'filter'                  => true,
+    'flag'                    => 1,
+    'inputType'               => 'AbtMenu',
+    'foreignKey'              => 'tl_bemod_abteilungen.abtname',
+    'eval'                    => array(
+                                    'feEditable'=>true,
+                                    'feViewable'=>true,
+                                    'feGroup'=>'qualifications',
+                                    'multiple'=>true,
+                                    'mandatory'=>true,
+                                    'tl_class'=>'clr'
+                                ),
+    // Es handelt sich hier um ein eigenes Widget. Um auch in der Datenbank übernehmen zu können, was wir eingegeben haben, damit das nicht wieder vergessen wird, müssen wir callback Funktionen für Speichern dieser Felder und Laden dieser Felder anlegen. Die Funktionen, die die Daten dann in Datenbnak und Contao abspeichern kommen ganz unten in DIESER Datei unter den Fieldconfigurations
+    'save_callback'			  => array($strName, 'saveAbteilungen'),
+    'load_callback'			  => array($strName, 'getSelectedAbteilungen'),
+    'sql'                     => "blob NULL"
+);
+
+$GLOBALS['TL_DCA'][$strName]['fields']['departementcheckboxes'] = array
+(
+    'label'                   => &$GLOBALS['TL_LANG'][$strName]['departementcheckboxes'],
+    'exclude'                 => true,
+    'search'                  => true,
+    'sorting'                 => true,
+    'filter'                  => true,
+    'flag'                    => 1,
+    'inputType'               => 'AbtMenu',
+    'foreignKey'              => 'tl_bemod_abteilungen.abtname',
+    'eval'                    => array(
+                                    'feEditable'=>true,
+                                    'feViewable'=>true,
+                                    'feGroup'=>'qualifications',
+                                    'multiple'=>true,
+                                    'mandatory'=>true,
+                                    'tl_class'=>'clr'
+                                ),
+    // Es handelt sich hier um ein eigenes Widget. Um auch in der Datenbank übernehmen zu können, was wir eingegeben haben, damit das nicht wieder vergessen wird, müssen wir callback Funktionen für Speichern dieser Felder und Laden dieser Felder anlegen. Die Funktionen, die die Daten dann in Datenbnak und Contao abspeichern kommen ganz unten in DIESER Datei unter den Fieldconfigurations
+    'save_callback'			  => array($strName, 'saveAbteilungen'),
+    'load_callback'			  => array($strName, 'getSelectedAbteilungen'),
+    'sql'                     => "blob NULL"
+);
+
 
 
 // Auch hier nehmen wir wieder ein paar Funktionen für unsere Elemente auf. Allerdings handelt es sich hierbei nur um die 'toggleIcon' und 'toggleVisibility' - Funktionen, die wir aus der /Resources/contao/dca/tl_bemod_ansprechpartner.php bereits besser beschrieben kennen. Wird grob gesagt verwendet, um Elemente aus und einzublenden und Ihre Datenbank Einträge entsprechend anzupassen.

@@ -13,6 +13,8 @@ $strName = 'tl_content';
 // Zentrale Elemente die in Contao bereits existiert haben und nur leicht erweitert wurden werden in der default übersetzt (In diesem Fall eine neue Auswahl von Inhaltselementen unter Artikel - Elementtyp (erstellt in der Config unter TL_CTE))
 $GLOBALS['TL_LANG']['CTE']['ansprechpartner_einzeln'] = ['Ansprechpartner'];
 
+$GLOBALS['TL_LANG'][$strName]['ansprechpartnerType'] = ['Ansprechpartner Einfügemodus', 'Wählen Sie aus der gegebenen Liste den Einfügemodus für die Ansprechpartner. Einzeln: Einen einzigen Ansprechpartner zum einfügen auswählen. Individuell: Wählen Sie per Checkboxes die Ansprechpartner, die eingefügt werden sollen aus. Abteilungen: Wählen Sie die Abteilungen aus, zu denen die Ansprechpartner eingefügt werden sollen. Alle: Alle Ansprechpartner ausgeben.'];
+$GLOBALS['TL_LANG'][$strName]['ansprechpartnerType']['options'] = ['Einzeln', 'Individuell', 'Abteilungen', 'Alle'];;
 // Unser eigenes Widget für das Inhaltselement - der AnsprechpartnerPicker muss hier noch eine betextung bekommen.
 $GLOBALS['TL_LANG'][$strName]['ansprechpartnerpicker'] = ['Ansprechpartner Select Menü', 'Wählen Sie aus der gegebenen Liste den Ansprechpartner, den Sie in das Frontend übernehmen wollen. Die Sortierung erfolgt nach dem vergebenen Sortierindex und sekundär alphabetisch nach dem Nachnamen. Beachten Sie bitte auch, dass ein Ansprechpartner, der in der zentralen Verwaltung ausgeblendet ist, nicht im Frontend angezeigt wird!'];
 
