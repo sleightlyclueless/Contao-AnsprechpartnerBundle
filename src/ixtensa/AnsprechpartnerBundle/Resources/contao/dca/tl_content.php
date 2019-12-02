@@ -37,8 +37,7 @@ $GLOBALS['TL_DCA'][$strName]['fields']['ansprechpartnerpicker'] = array
     'inputType'               => 'AnsprechpartnerPicker',
     'foreignKey'              => 'tl_bemod_ansprechpartner.CONCAT(salutation," ",title," ",firstname," ",name)',
     'eval'                    => array('multiple'=>false),
-    // 'save_callback'			  => array($strName, 'saveAnsprechpartner'),
-    // 'load_callback'			  => array($strName, 'getAnsprechpartner'),
+    'options_callback'			  => array('ixtensa\AnsprechpartnerBundle\dca\tl_content\tl_content_ansprechpartner', 'getAnsprechpartner'),
     'sql'                     => "blob NULL"
 );
 
@@ -163,46 +162,28 @@ class tl_content_ansprechpartner extends \Backend
 	}
 
 
+    // Wir zeigen im options_callback nur die veröffentlichten Ansprechpartner, der rest kann nicht ausgewählt werden
+    public function getAnsprechpartner() {
+		$tmp = array();
+		$query = $this->Database->prepare("SELECT * FROM tl_bemod_ansprechpartner WHERE published = 1 ORDER BY 'sortingIndex' DESC, 'name' ASC")->execute();
 
+		$res = $query->fetchAllAssoc();
 
-    // public function getAnsprechpartner() {
-	// 	$tmp = array();
-	// 	$query = $this->Database->prepare("SELECT * FROM tl_bemod_ansprechpartner WHERE published = 1")->execute($abtId);
-    //
-	// 	$res = $query->fetchAllAssoc();
-    //
-	// 	foreach ($res as $key => $value) {
-	// 		$tmp[] = $value['id'];
-	// 	}
-    //
-	// 	$res = serialize($tmp);
-    //
-	// 	return $res;
-	// }
+		foreach ($res as $key => $value) {
+            $id = $value['id'];
+            $sal = $value['salutation'];
+            $title = $value['title'];
+            $name = $value['name'];
+            $fname = $value['firstname'];
+            // Hier wird die ID verpackt mitgegeben, damit die Klassenfunktion /Classes/Ansprechpartner.php und /Widget/AbsprechpartnerPicker.php die ID wieder aus den [ ] Klammern auspacken und für weitere Abfragen etc. in z.B. der Helperclass verwenden kann
+            $text = '['.$id.'] ' . $sal . ' ' . $title . ' ' . $name . ' ' . $fname;
+			$tmp[] = $text;
+		}
+        // array(2) { [0]=> string(24) "[id] Herr Herr Zill Sebastian" [1]=> string(25) "[id] Herr Herr Genschow Siegie" }
 
-
-
-    // public function saveAnsprechpartner($varValue, DataContainer $dc)
-    // {
-    //     $abtId = $dc->id;
-    // 	$data = unserialize($varValue);
-    //
-    // 	if (isset($data)) {
-    // 		$this->Database->prepare("DELETE FROM tl_bemod_ansprechpartner WHERE id = ?")->execute($abtId);
-    // 		foreach ($data as $value) {
-    //
-    // 			$arrData = array(
-    // 				'tstamp'		=> time(),
-    // 				'id'			=> $dc->id,
-    // 				'abtname'		=> $value
-    // 			);
-    //
-	// 			$this->Database->prepare("INSERT INTO tl_bemod_ansprechpartner %s")
-	// 				->set($arrData)
-	// 				->execute();
-    //
-    // 		}
-    // 	}
-    // 	return $varValue;
-    // }
+		// $res = serialize($tmp);
+        // string(40) "a:2:{i:0;s:4:"Zill";i:1;s:8:"Genschow";}"
+        // dump($tmp); exit;
+		return $tmp;
+	}
 }

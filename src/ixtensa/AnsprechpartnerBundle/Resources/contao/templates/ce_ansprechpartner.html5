@@ -1,6 +1,6 @@
 <!-- Sehen Sie Ihren Ansprechpartner nicht? Vielleicht ist er in der Verwaltungsoberfläche oder dem Artikel selbst ausgeblendet?-->
 <?php if($this->published): ?>
-    <div itemscope itemtype="http://schema.org/Person" class="ce_ix_ansprechpartner <?php echo $this->class; ?> grid-container block columns small-12">
+    <div itemscope itemtype="http://schema.org/Person" <?php echo $this->cssID; ?> class="ce_ix_ansprechpartner grid-container block columns small-12 <?php echo $this->class; ?>">
         <?php if($this->addImage): ?>
         	<div class="image">
         		<figure class="image_container" <?php if ($this->margin): ?> style="<?= trim($this->margin); ?>"<?php endif; ?>>
@@ -47,7 +47,9 @@
                 </p>
     		<?php endif; ?>
             <?php if($this->fax): ?>
-    			<p class="fax"><?= $this->fax ?></p>
+    			<p class="fax">
+                    <span><?= $this->fax ?></span>
+                </p>
     		<?php endif; ?>
             <?php if($this->email): ?>
                 <p class="email">

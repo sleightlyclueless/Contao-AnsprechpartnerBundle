@@ -19,7 +19,37 @@ class HelperClass extends \Backend
         // $this->db = $db;
     }
 
-    // Get Departement IDs from BLOB like:
+    // Aus einem String: "[ID] Begrüßung Titel Name Vorname" ein Array mit den entzogenen IDs des Ansprechpartners machen.
+    public function getAnsprechpartnerId($str)
+    {
+        // We see the IDs are always imbedded within " Symbols. These are our start and end inicators
+        $startDelimiter = '[';
+        $endDelimiter = ']';
+        // We pre - create an array to add our contents to
+        $contents = array();
+        // We need the length of the start and end strings for our math to find the generic content within
+        $startDelimiterLength = strlen($startDelimiter);
+        $endDelimiterLength = strlen($endDelimiter);
+        // Reset values of Start to 0 when we first start
+        $startFrom = $contentStart = $contentEnd = 0;
+        // If we find new content to add to our array, determined by out start and end symbols, we will find the string in between the delimeters and add it to our array
+        while (false !== ($contentStart = strpos($str, $startDelimiter, $startFrom))) {
+            // Find Start of content
+            $contentStart += $startDelimiterLength;
+            // Find End of content
+            $contentEnd = strpos($str, $endDelimiter, $contentStart);
+                if (false === $contentEnd) {
+                    break;
+                }
+            // ADD the found ID to Array $contents
+            $contents[] = substr($str, $contentStart, $contentEnd - $contentStart);
+            // Reset the start element to after the element we just found and repeat the loop
+            $startFrom = $contentEnd + $endDelimiterLength;
+        }
+        return $contents;
+    }
+
+    // Departement IDs aus einem BLOB in ein Array entziehen:
     // a:3:{i:0;s:1:"7";i:1;s:1:"9";i:2;s:1:"4";}
     // -> Array ( [0] => 7 [1] => 9 [2] => 4 )
     public function getDepartementIds($str)
@@ -51,15 +81,16 @@ class HelperClass extends \Backend
         return $contents;
     }
 
-
+    // Aus einem Array mit IDs die Namen aus der Tabelle tl_bemod_abteilungen_lang ziehen und Kommagetrennt in einem String speichern
     public function queryDepartementNames($arrIds)
     {
         // Der global $objPage beinhaltet abrufbare Metainformationen der Seite, wir nutzen ihn für die 'language' der Seite später
         global $objPage;
 
         // Globals
-        // Wichtig für die for Schleifen. Irgendwann muss diese Abbrechen -- per default auf 1000 gesetzt weil unwahrscheinlich hoch und irgendwann muss Schleife aufhören und String wird für FE zu groß
+        // $maxAbteilungen ist wichtig für die kommenden for Schleifen. Irgendwann müssen diese Abbrechen -- per default auf 1000 gesetzt. Unwahrscheinlich hoch und irgendwann muss Schleife schließlich aufhören.
         $maxAbteilungen = 1000;
+        // Sprache in String wandeln und abspeichern – wird ganz zum Schluss an SQL query angehängt.
         $language = "'".$objPage->language."'";
         $fallbackLanguage = "'de'";
 
@@ -71,7 +102,7 @@ class HelperClass extends \Backend
         // Wir bauen eine IN query für PIDs separat auf und hängen Sie dann an die Query dran
         $pidQuery = "pid IN(";
         // Das Array mit den IDs (z.B. Array ( [0] => 7 [1] => 9 [2] => 4 )) durchlaufen wir jetzt so oft, bis wir kein neues Element mehr 'poppen', also abhängen können -> Bis das Array leer ist
-        // Für jeden gefunden Eintrag unter IDs erweitern wir die SQL Query um eine WHERE Klausel mit OR, damit bei mehreren PIDs mehrere Einträge ausgegeben werden.
+        // Für jeden gefunden Eintrag unter IDs erweitern wir die SQL Query um eine WHERE Klausel mit OR und den PIDs, damit bei mehreren PIDs mehrere Einträge ausgegeben werden.
         // TODO Mit foreach Schleife umschreiben
         for ($counter=0; $counter < $maxAbteilungen; $counter++) {
             // Abhängen letztes Element
@@ -82,7 +113,12 @@ class HelperClass extends \Backend
                 $pidQuery .= ",";
             // Wenn das Array leer ist, brich die FOR Schleife ab und hänge die erstellte WHERE IN Klausel an die Queries an und schließe Sie mit einem ) ab nachdem du das letzte Komma entfernt hast
             } else {
-                $pidQuery = substr($pidQuery, 0, -1);
+                if ($counter == 0) {
+                    $pidQuery .= "NULL";
+                }
+                if ($counter > 0) {
+                    $pidQuery = substr($pidQuery, 0, -1);
+                }
                 $pidQuery .= ")";
                 // Wir sind durch alle IDs durch oder durch die maximale erlaubte Anzahl an IDs ($maxAbteilungen) -> die erweiterte $pidQuery zu den Queries anhängen
                 $query .= $pidQuery;
