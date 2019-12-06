@@ -11,6 +11,7 @@
  // Wir haben in der src/ixtensa/AnsprechpartnerBundle/Widget/AbtMenu.php und src/ixtensa/AnsprechpartnerBundle/Widget/AnsprechpartnerPicker.php ein zusätzliches Widgets (InputType Feld für Contao DCA), abgeleitet von der Contao Checkbox und dem Contao Select Menü erstellt. Damit wir diese Felder erstellen und verwenden können müssen wir als aller erstes die neuen Dateien Contao "zeigen", damit Sie verwendet und geparst werden. Das machen wir hier über ['BE_FFL']['WidgetName'] = Namespace, wo das Widget konfiguriert wird (Namespace muss dann entsprechend auch in der AbtMenu.php stehen)
  // Back end form fields kommen aus einem globalen Array $GLOBALS['BE_FFL']['WidgetName']
  $GLOBALS['BE_FFL']['AbtMenu']  = 'ixtensa\\AnsprechpartnerBundle\\Widget\\AbtMenu';
+ $GLOBALS['BE_FFL']['AnsprechPartnerCheckboxes']  = 'ixtensa\\AnsprechpartnerBundle\\Widget\\AnsprechPartnerCheckboxes';
  $GLOBALS['BE_FFL']['AnsprechpartnerPicker']  = 'ixtensa\\AnsprechpartnerBundle\\Widget\\AnsprechpartnerPicker';
 
 
@@ -42,7 +43,7 @@
 
  // CONTENT ELEMENTS  erweitern das Frontend Artikel Inhaltselemente
  // Content elements are stored in a global array called "TL_CTE". You can add your own content elements by adding them to the array.
- $GLOBALS['TL_CTE']['Ixtensa']['ansprechpartner_einzeln'] = 'ixtensa\\AnsprechpartnerBundle\\Classes\\Ansprechpartner';
+ $GLOBALS['TL_CTE']['Ixtensa']['ansprechpartner'] = 'ixtensa\\AnsprechpartnerBundle\\Classes\\Ansprechpartner';
 
 
 

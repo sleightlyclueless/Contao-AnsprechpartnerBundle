@@ -33,14 +33,18 @@ class Ansprechpartner extends \ContentElement
 			//  $this->ansprechpartnerpicker ist ein DCA Feld des Inhaltselements in der /Resources/contao/dca/tl_content.php und der /Widget/AnsprechpartnerPicker.php von hier ziehen wir uns die in dem Element gewählte Ansprechpartner Person mit seiner ID raus über diese Abfrage raus. Mit dieser ID können wir eine Datenbank Abfrage machen um in der Backend Wildcard den Vornamen und Nachnamen des ausgewählten Partners zu sehen. Wir holen uns mit einer externen Helperclass Funktion unter /Helper/Helperclass.php die aktuelle Ansprechpartner ID des ausgewählten ANsprechpartners um sie in der SQL Abfrage für weitere Ausgabe von Meta Informationen verwenden zu können.
             $ansprechpartnerId = HelperClass::getAnsprechpartnerId($this->ansprechpartnerpicker);
 			// Datenbank abfrage mit den IDs ausführen
-            $res = $this->Database->prepare("SELECT * FROM tl_bemod_ansprechpartner WHERE id = ?")->execute($ansprechpartnerId)->fetchAssoc();
-            // Zusatz für die Backend wildcard. Wenn der Ansprechpartner irgendwann mal ausgeblendet wurde wird es in die Wildcard hinzu geschrieben, sollte er noch ausgewählt sein.
-            $publishedStatus = '';
-            if ($res['published'] != 1) {
-                $publishedStatus = '(wurde ausgeblendet!)';
-            }
-			// Den Namen und Vornamen der Person im Backend Template title ausgeben, gefolgt von dem Zusatz, wenn er ausgeblendet ist.
-            $this->Template->title = $res['salutation'] . ' ' . $res['title'] . ' ' . $res['name'] . ' ' . $res['firstname'] . '' .$publishedStatus;
+
+            // TODO WIEDER EINBLENDEN NACH TL_CONTENT ANPASSUNGEN FÜR VERSCHIEDENE EINFÜGEOPTIONEN START
+            // $res = $this->Database->prepare("SELECT * FROM tl_bemod_ansprechpartner WHERE id = ?")->execute($ansprechpartnerId)->fetchAssoc();
+            // // Zusatz für die Backend wildcard. Wenn der Ansprechpartner irgendwann mal ausgeblendet wurde wird es in die Wildcard hinzu geschrieben, sollte er noch ausgewählt sein.
+            // $publishedStatus = '';
+            // if ($res['published'] != 1) {
+            //     $publishedStatus = '(wurde ausgeblendet!)';
+            // }
+			// // Den Namen und Vornamen der Person im Backend Template title ausgeben, gefolgt von dem Zusatz, wenn er ausgeblendet ist.
+            // $this->Template->title = $res['salutation'] . ' ' . $res['title'] . ' ' . $res['name'] . ' ' . $res['firstname'] . '' .$publishedStatus;
+            // TODO WIEDER EINBLENDEN NACH TL_CONTENT ANPASSUNGEN FÜR VERSCHIEDENE EINFÜGEOPTIONEN END
+
 			// Backend Template parsen und ausgeben
             return $this->Template->parse();
         }
