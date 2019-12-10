@@ -12,18 +12,18 @@
 // Namespace: Der eindeutige Pfad, der auf diese entsprechende PHP Datei zeigt, damit sie von anderen Orten aus eindeutig aufgerufen und oder referenziert werden kann.
 namespace ixtensa\AnsprechpartnerBundle\dca\tl_content;
 
+// Wir brauchen eigene erstellte Widgets Ansprechpartner-Picker, Checkboxes und das AbtMenu für dieses DCA, das wir in der entsprechenden /Widget/Ansprechpartnerpicker.php, /Widget/AnsprechPartnerCheckboxes.php und /Widget/AbtMenu.php erstellt und konfiguriert haben. Wir holen diese uns also per Namespace hier zum verwenden. Wir machen das so, weil wenn die root Checkboxen im Core verändert werden, bleiben die eigenen Widgets unberührt.
+use \ixtensa\AnsprechpartnerBundle\Widget\AnsprechpartnerPicker;
 use \ixtensa\AnsprechpartnerBundle\Widget\AnsprechPartnerCheckboxes;
 use \ixtensa\AnsprechpartnerBundle\Widget\AbtMenu;
-// Wir brauchen unser Widget AnsprechpartnerPicker für dieses DCA, das wir in der entsprechenden /Widget/Ansprechpartnerpicker.php erstellt und konfiguriert haben. Wir holen uns es also per Namespace hier zum verwenden
-use \ixtensa\AnsprechpartnerBundle\Widget\AnsprechpartnerPicker;
 
-// Wir fügen jetzt wieder Felder, Labels und so weiter für unsere Module zu Contao hinzu - und brauchen dafür immer eine bestimmte Tabelle, die in der /Resources/contao/config/config.php schon instanziert wurde. In diesem Fall erweitern wir allerdings  eine bereits bestehende Tabelle für die Inhaltselemente der Artikel - die tl_content. Da für den entsprechenden Backend Bereich immer Modular die gleiche Tabelle verwendet werden sollte ist es besser wenn wir diese hier zentral anlegen. Man wird sehen der $strName kommt in dieser Datei oft vor. Wenn sich der Tabellenname ändern soll müssen wir das hier dann nur einmal konfigurieren.
+// Wir fügen jetzt wieder Felder, Labels und so weiter für unsere Module zu Contao hinzu - und brauchen dafür immer eine bestimmte Tabelle, die in der /Resources/contao/config/config.php schon instanziert wurde. In diesem Fall erweitern wir allerdings eine bereits bestehende Tabelle für die Inhaltselemente der Artikel - die tl_content. Da für den entsprechenden Backend Bereich immer Modular die gleiche Tabelle verwendet werden sollte ist es besser wenn wir diese hier zentral anlegen. Man wird sehen der $strName kommt in dieser Datei oft vor. Wenn sich der Tabellenname ändern soll müssen wir das hier dann nur einmal konfigurieren.
 $strName = 'tl_content';
 
-// Einen weiteren Selector hinzufügen und NICHT die anderen überschreiben
+// Einen weiteren Selector hinzufügen und NICHT die anderen überschreiben: ['__selector__'][]
 $GLOBALS['TL_DCA'][$strName]['palettes']['__selector__'][] = 'ansprechpartnerType';
 
-// So wir haben jetzt mehrere Paletten, von denen eine eingefügt wird, je nach dem welche Value das Selector Feld ansprechpartnerType trägt. Diese Werte sind in dem reference und options Tag vom DCA Feld vergeben und in der /Resources/contao/languages/de/default.php konfiguriert. Es ändert sich eigentlich immer nur ein Feld nach ansprechpartnerType je nach dem welcher Modus zum einfügen gewählt wurde
+// So, wir haben jetzt mehrere Paletten, von denen eine eingefügt wird, je nach dem welche Value das Selector Feld ansprechpartnerType trägt. Diese Werte sind in dem reference und options Tag vom DCA Feld vergeben und in der /Resources/contao/languages/de/default.php konfiguriert. Es ändert sich eigentlich immer nur ein Feld nach ansprechpartnerType je nach dem welcher Modus zum einfügen gewählt wurde
 $GLOBALS['TL_DCA'][$strName]['palettes']['ansprechpartner'] = '{type_legend},type;{contactPerson_legend},ansprechpartnerType;{expert_legend:hide},guests,cssID;{grid_legend},grid_columns,grid_options;{invisible_legend:hide},invisible,start,stop;';
 $GLOBALS['TL_DCA'][$strName]['palettes']['Einzeln'] = '{type_legend},type;{contactPerson_legend},ansprechpartnerType,ansprechpartnerpicker;{expert_legend:hide},guests,cssID;{grid_legend},grid_columns,grid_options;{invisible_legend:hide},invisible,start,stop;';
 $GLOBALS['TL_DCA'][$strName]['palettes']['Individuell'] = '{type_legend},type;{contactPerson_legend},ansprechpartnerType,ansprechpartnercheckboxes;{expert_legend:hide},guests,cssID;{grid_legend},grid_columns,grid_options;{invisible_legend:hide},invisible,start,stop;';
@@ -41,7 +41,7 @@ $GLOBALS['TL_DCA'][$strName]['fields']['ansprechpartnerType'] = array
     'options'                 => $GLOBALS['TL_LANG'][$strName]['ansprechpartnerType']['options'],
     'reference'               => &$GLOBALS['TL_LANG']['CTE'],
     'eval'                    => array(
-                                    // 'mandatory'=>true,
+                                    'mandatory'=>true,
                                     'includeBlankOption'=>true,
                                     'submitOnChange'=>true,
                                     'tl_class'=>'clr'
@@ -60,7 +60,12 @@ $GLOBALS['TL_DCA'][$strName]['fields']['ansprechpartnerpicker'] = array
     'flag'                    => 1,
     'inputType'               => 'AnsprechpartnerPicker',
     'foreignKey'              => 'tl_bemod_ansprechpartner.CONCAT(salutation," ",title," ",firstname," ",name)',
-    'eval'                    => array('multiple'=>false),
+    'eval'                    => array(
+                                    'multiple'=>false,
+                                    'includeBlankOption'=>true,
+                                    'mandatory'=>true,
+                                    'tl_class'=>'clr'
+                                ),
     'options_callback'			  => array('ixtensa\AnsprechpartnerBundle\dca\tl_content\tl_content_ansprechpartner', 'getAnsprechpartner'),
     'sql'                     => "blob NULL"
 );
@@ -74,7 +79,7 @@ $GLOBALS['TL_DCA'][$strName]['fields']['ansprechpartnercheckboxes'] = array
     'sorting'                 => true,
     'filter'                  => true,
     'flag'                    => 1,
-    'inputType'               => 'AbtMenu',
+    'inputType'               => 'AnsprechPartnerCheckboxes',
     'foreignKey'              => 'tl_bemod_ansprechpartner.CONCAT(salutation," ",title," ",firstname," ",name)',
     'eval'                    => array(
                                     'feEditable'=>true,
@@ -84,9 +89,8 @@ $GLOBALS['TL_DCA'][$strName]['fields']['ansprechpartnercheckboxes'] = array
                                     'mandatory'=>true,
                                     'tl_class'=>'clr'
                                 ),
+    'options_callback'			  => array('ixtensa\AnsprechpartnerBundle\dca\tl_content\tl_content_ansprechpartner', 'getAnsprechpartner'),
     // Es handelt sich hier um ein eigenes Widget. Um auch in der Datenbank übernehmen zu können, was wir eingegeben haben, damit das nicht wieder vergessen wird, müssen wir callback Funktionen für Speichern dieser Felder und Laden dieser Felder anlegen. Die Funktionen, die die Daten dann in Datenbnak und Contao abspeichern kommen ganz unten in DIESER Datei unter den Fieldconfigurations
-    // 'save_callback'			  => array('ixtensa\AnsprechpartnerBundle\dca\tl_content\tl_content_ansprechpartner', 'saveAnsprechpartnerCheck'),
-    // 'load_callback'			  => array('ixtensa\AnsprechpartnerBundle\dca\tl_content\tl_content_ansprechpartner', 'getAnsprechpartnerCheck'),
     'sql'                     => "blob NULL"
 );
 
@@ -109,9 +113,6 @@ $GLOBALS['TL_DCA'][$strName]['fields']['departementcheckboxes'] = array
                                     'mandatory'=>true,
                                     'tl_class'=>'clr'
                                 ),
-    // Es handelt sich hier um ein eigenes Widget. Um auch in der Datenbank übernehmen zu können, was wir eingegeben haben, damit das nicht wieder vergessen wird, müssen wir callback Funktionen für Speichern dieser Felder und Laden dieser Felder anlegen. Die Funktionen, die die Daten dann in Datenbnak und Contao abspeichern kommen ganz unten in DIESER Datei unter den Fieldconfigurations
-    // 'save_callback'			  => array('ixtensa\AnsprechpartnerBundle\dca\tl_content\tl_content_ansprechpartner', 'saveAbteilungenn'),
-    // 'load_callback'			  => array('ixtensa\AnsprechpartnerBundle\dca\tl_content\tl_content_ansprechpartner', 'getSelectedAbteilungen'),
     'sql'                     => "blob NULL"
 );
 
@@ -242,11 +243,10 @@ class tl_content_ansprechpartner extends \Backend
 
     // Custom Functions
 
-
     // Wir zeigen im options_callback nur die veröffentlichten Ansprechpartner, der rest kann nicht ausgewählt werden
     public function getAnsprechpartner() {
 		$tmp = array();
-		$query = $this->Database->prepare("SELECT * FROM tl_bemod_ansprechpartner WHERE published = 1 ORDER BY 'sortingIndex' DESC, 'name' ASC")->execute();
+		$query = $this->Database->prepare("SELECT * FROM tl_bemod_ansprechpartner WHERE published = 1 ORDER BY `sortingIndex` DESC, `name` ASC")->execute();
 
 		$res = $query->fetchAllAssoc();
 
@@ -266,88 +266,5 @@ class tl_content_ansprechpartner extends \Backend
         // string(40) "a:2:{i:0;s:4:"Zill";i:1;s:8:"Genschow";}"
         // dump($tmp); exit;
 		return $tmp;
-	}
-
-    // Die Abteilungen des eigenen Widgets AbtMenu beim Öffnen eines Ansprechpartners laden. Dieses Callback ist für neue Widgets nämlich noch nicht definiert und lässt man es weg werden diese Felder einfach weder gespeichert noch geladen
-    public function getSelectedAbteilungen($varValue, DataContainer $dc) {
-		$tmp = array();
-		$abtId = $dc->id;
-		$query = $this->Database->prepare("SELECT id FROM tl_bemod_abteilungen WHERE id = ?")->execute($abtId);
-
-		$res = $query->fetchAllAssoc();
-
-		foreach ($res as $key => $value) {
-			$tmp[] = $value['id'];
-		}
-
-		$res = serialize($tmp);
-
-		return $res;
-	}
-
-    // Die Abteilungen beim Speichern eines Ansprechpartners in die Datenbank in das entsprechende Feld eintragen. Dieses Callback ist für neue Widgets nämlich noch nicht definiert und lässt man es weg werden diese Felder einfach weder gespeichert noch geladen
-    public function saveAbteilungen($varValue, DataContainer $dc)
-    {
-        $abtId = $dc->id;
-    	$data = unserialize($varValue);
-
-    	if (isset($data)) {
-    		$this->Database->prepare("DELETE FROM tl_bemod_abteilungen WHERE id = ?")->execute($abtId);
-    		foreach ($data as $value) {
-
-    			$arrData = array(
-    				'tstamp'		=> time(),
-    				'id'			=> $dc->id,
-    				'abtname'		=> $value
-    			);
-
-				$this->Database->prepare("INSERT INTO tl_bemod_abteilungen %s")
-					->set($arrData)
-					->execute();
-
-    		}
-    	}
-    	return $varValue;
-    }
-
-    // Die Abteilungen des eigenen Widgets AbtMenu beim Öffnen eines Ansprechpartners laden. Dieses Callback ist für neue Widgets nämlich noch nicht definiert und lässt man es weg werden diese Felder einfach weder gespeichert noch geladen
-    public function getAnsprechpartnerCheck($varValue, DataContainer $dc) {
-        $tmp = array();
-		$abtId = $dc->id;
-		$query = $this->Database->prepare("SELECT id FROM tl_bemod_ansprechpartner WHERE id = ?")->execute($abtId);
-
-		$res = $query->fetchAllAssoc();
-
-		foreach ($res as $key => $value) {
-			$tmp[] = $value['id'];
-		}
-
-		$res = serialize($tmp);
-		return $res;
-	}
-
-    // Die Abteilungen beim Speichern eines Ansprechpartners in die Datenbank in das entsprechende Feld eintragen. Dieses Callback ist für neue Widgets nämlich noch nicht definiert und lässt man es weg werden diese Felder einfach weder gespeichert noch geladen
-    public function saveAnsprechpartnerCheck($varValue, DataContainer $dc)
-    {
-        $abtId = $dc->id;
-    	$data = unserialize($varValue);
-
-    	if (isset($data)) {
-    		$this->Database->prepare("DELETE FROM tl_bemod_ansprechpartner WHERE id = ?")->execute($abtId);
-    		foreach ($data as $value) {
-
-    			$arrData = array(
-    				'tstamp'		=> time(),
-    				'id'			=> $dc->id,
-    				'firstname'		=> $value['firstname']
-    			);
-
-				$this->Database->prepare("INSERT INTO tl_bemod_ansprechpartner %s")
-					->set($arrData)
-					->execute();
-
-    		}
-    	}
-    	return $varValue;
     }
 }
