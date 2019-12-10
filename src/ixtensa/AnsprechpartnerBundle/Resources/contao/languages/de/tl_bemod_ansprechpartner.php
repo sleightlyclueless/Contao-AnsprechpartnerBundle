@@ -63,5 +63,5 @@ $GLOBALS['TL_LANG'][$strName]['alt'] = ['Alttext', 'Hier können Sie den Alttext
 $GLOBALS['TL_LANG'][$strName]['caption'] = ['Caption', 'Hier können Sie eine Caption für das Bild eingeben'];
 $GLOBALS['TL_LANG'][$strName]['resize'] = ['Bildgröße', 'Hier können Sie zusätzliche Einstellungen zur Bildgröße / Format in natürlichen Zahlen eingeben'];
 $GLOBALS['TL_LANG'][$strName]['margin'] = ['Margin', 'Hier können Sie eigene inline margins vergeben.'];
-$GLOBALS['TL_LANG'][$strName]['sortingIndex'] = ['Sortierpriorität festlegen', 'Hier können Sie mit einer natürlichen Zahl die Sortierpriorität des Ansprechpartners angeben. Wenn in einem Modul mehrere Ansprechpartner eingebunden werden, werden Sie absteigend nach diesen Zahlen sortiert. Bei Gleichstand wird der Nachname berücksichtigt'];
+$GLOBALS['TL_LANG'][$strName]['sortingIndex'] = ['Sortierpriorität festlegen', 'Hier können Sie mit einer natürlichen Zahl die Sortierpriorität des Ansprechpartners angeben. Wenn in einem Modul mehrere Ansprechpartner eingebunden werden, werden Sie absteigend nach diesen Zahlen sortiert. Höhere Zahl = höhere Priorität. Bei Gleichstand wird der Nachname berücksichtigt'];
 $GLOBALS['TL_LANG'][$strName]['published'] = ['Ansprechpartner veröffentlichen', 'Setzen Sie hier bitte einen Haken, um den Ansprechpartner zu veröffentlichen'];

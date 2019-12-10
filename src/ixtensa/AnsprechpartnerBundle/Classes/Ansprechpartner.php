@@ -7,45 +7,86 @@
  * @copyright (c) 2019
  */
 
-// Diese Classes sind verantwortlich, dass das Element im Backend und Frontend auftaucht / generiert wird, weil hier die Backend und Frontend Templates verarbeitet werden
-// Es handelt sich hierbei um ein Inhalts Element für Artikel - Inhaltselemente, weswegen wir hier die \ContentElement erweitern
-// Wir definieren hier nun fest den Namespace des Bundles zu dieser Datei – wird in der /Resources/contao/config/config.php verwendet um auf diese Class für die CTE erweiterung per namespace zu verweisen
+
+// Wir definieren hier nun fest den Namespace des Bundles zu dieser Datei – wird in der /Resources/contao/config/config.php verwendet um auf diese Class für die CTE Erweiterung per namespace zu verweisen
 namespace ixtensa\AnsprechpartnerBundle\Classes;
-// Wir nutzen Funktionen, die aus einer Helferklasse stammen, um den Code übersichtlicher zu gestalten
+
+// Wir holen uns alle externen Helperclass Funktionen durch die unter /Helper/Helperclass.php erstellten Funktionen immer nach dem Schema HelperClass::Funktionsname. Die einzelnen Funktionen sind in der Helperclass Datei näher beschrieben und dienen dem zentralen Verwenden und auslagern von Code zur modularen und besseren Lesbarkeit
 use ixtensa\AnsprechpartnerBundle\Helper\HelperClass;
 
-// Wir extenden in dieser Klasse die Content Elemente - wie bereits erwähnt - also für Artikel - Inhaltselemente
+
+// Es handelt sich hierbei um ein Inhalts Element für Artikel (CTE) - Inhaltselemente, weswegen wir hier die \ContentElement von Contao erweitern – wurde in der /Resources/contao/config/config.php so festgelegt
 class Ansprechpartner extends \ContentElement
 {
-	// Das hier ist / sind die Content Template(s) als zentrale(n) String(s) für die FRONTEND AUSGABE - Werden hier zentral definiert und können dann mit $this->strTemplate verwendet werden.
-	protected $strTemplate = 'ce_ansprechpartner';
+    // Das hier ist das Content Template als zentraler String für die FRONTEND AUSGABE - Werden hier zentral definiert und können dann mit $this->strTemplate in private functions verwendet werden.
+    protected $strTemplate = 'ce_ansprechpartner';
 
-	// Die Generate Funktion ist verantwortlich für die Backend Ausgabe des Elements. Also dass wir im Backend in der Elementübersicht Daten über dieses Element angezeigt bekommen. (In diesem Fall "### Ansprechpartner ###" und sein Name und Vorname)
+    // ===============================================BACKEND===============================================
+
+    // Die Generate Funktion ist verantwortlich für die Backend Ausgabe des Elements, also dass wir im Backend in der Elementübersicht Daten über dieses Element angezeigt bekommen. (In diesem Fall "### Ansprechpartner ###" und weitere Angaben je nach Typ der Ausgabe)
     public function generate()
 	{
         if (TL_MODE == 'BE')
 		{
-			// Es gibt ein Standard Template für Backend Wildcards. Dieses Template erzeugt die Standard Backend Karten - so eine wollen wir auch.
+			// Es gibt ein Standard Template für Backend Wildcards. Dieses Template erzeugt die Standard Backend Karte - so eine wollen wir auch.
             $this->strTemplate          = 'be_wildcard';
             $this->Template             = new \BackendTemplate($this->strTemplate);
 			// Die Wildcard ist der Untere Teil des Elements. Dort schreiben wir "### Ansprechpartner ###" hin
             $this->Template->wildcard   = "### Ansprechpartner ###";
-			//  $this->ansprechpartnerpicker ist ein DCA Feld des Inhaltselements in der /Resources/contao/dca/tl_content.php und der /Widget/AnsprechpartnerPicker.php von hier ziehen wir uns die in dem Element gewählte Ansprechpartner Person mit seiner ID raus über diese Abfrage raus. Mit dieser ID können wir eine Datenbank Abfrage machen um in der Backend Wildcard den Vornamen und Nachnamen des ausgewählten Partners zu sehen. Wir holen uns mit einer externen Helperclass Funktion unter /Helper/Helperclass.php die aktuelle Ansprechpartner ID des ausgewählten ANsprechpartners um sie in der SQL Abfrage für weitere Ausgabe von Meta Informationen verwenden zu können.
-            $ansprechpartnerId = HelperClass::getAnsprechpartnerId($this->ansprechpartnerpicker);
-			// Datenbank abfrage mit den IDs ausführen
 
-            // TODO WIEDER EINBLENDEN NACH TL_CONTENT ANPASSUNGEN FÜR VERSCHIEDENE EINFÜGEOPTIONEN START
-            // $res = $this->Database->prepare("SELECT * FROM tl_bemod_ansprechpartner WHERE id = ?")->execute($ansprechpartnerId)->fetchAssoc();
-            // // Zusatz für die Backend wildcard. Wenn der Ansprechpartner irgendwann mal ausgeblendet wurde wird es in die Wildcard hinzu geschrieben, sollte er noch ausgewählt sein.
-            // $publishedStatus = '';
-            // if ($res['published'] != 1) {
-            //     $publishedStatus = '(wurde ausgeblendet!)';
-            // }
-			// // Den Namen und Vornamen der Person im Backend Template title ausgeben, gefolgt von dem Zusatz, wenn er ausgeblendet ist.
-            // $this->Template->title = $res['salutation'] . ' ' . $res['title'] . ' ' . $res['name'] . ' ' . $res['firstname'] . '' .$publishedStatus;
-            // TODO WIEDER EINBLENDEN NACH TL_CONTENT ANPASSUNGEN FÜR VERSCHIEDENE EINFÜGEOPTIONEN END
+            // Jetzt brauchen wir noch den Title / andere Angaben. Diese varriieren je nach dem welcher Typ der Ansprechpartner Ausgabe gewählt wurde (Einzeln, Individuelle Checkboxen, nach Abteilungen, Alle). Für diese Fälle müssen wir per switch-case Fällen auch unterschiedliche Abfragen und Wildcard Titles erstellen
+            switch ($this->ansprechpartnerType)
+    		{
+                // Fall Einzeln – den Namen abfragen und in wildcard ausgeben
+    			case 'Einzeln':
+                    // "[31] Herr Auszubildender Mustermann Max"
+    				$varValue = $this->ansprechpartnerpicker;
+                    //  $this->ansprechpartnerpicker ist ein DCA Feld des Inhaltselements in der /Resources/contao/dca/tl_content.php und der /Widget/AnsprechpartnerPicker.php. Von hier ziehen wir uns die in dem Element gewählte Ansprechpartner - Person mit seiner ID über diese Helperclass Abfrage raus, wenn die ID nach dem Schema [ID] vorliegt. Die Funktion liest die ID in den eckigen Klammern aus und liefert Sie als Array zurück.
+                    $ansprechpartnerId = HelperClass::getAnsprechpartnerIds($varValue);
+                    // Mit der ID können wir wieder eine externe Datenbank Abfrage machen um in der Backend Wildcard den Vornamen und Nachnamen des ausgewählten Partners zu sehen. Diese Funktion liefert den kompletten Datensatz des Ansprechpartners der jetzigen ID aus der entsprechenden Tabelle zurück.
+                    $res = HelperClass::getAnsprechpartnerDataById($ansprechpartnerId);
+                    // Zusatz für die Backend wildcard. Wenn der Ansprechpartner irgendwann mal ausgeblendet wurde, wird es in die Wildcard hinzu geschrieben, sollte er noch ausgewählt sein.
+                    $publishedStatus = '';
+                    if ($res['published'] != 1) {
+                        $publishedStatus = '(wurde ausgeblendet!)';
+                    }
+        			// Den Namen und Vornamen der Person im Backend Template title ausgeben, gefolgt von dem Zusatz, falls er ausgeblendet ist.
+                    $this->Template->title = $res['salutation'] . ' ' . $res['title'] . ' ' . $res['name'] . ' ' . $res['firstname'] . '' .$publishedStatus;
+                    break;
 
-			// Backend Template parsen und ausgeben
+                // Für die individuelle Liste als Einfügeoption geben wir im Backend nur 'Individuelle Ansprechpartner' aus – bei mehreren Ansprechpartnern wird das sonst mit allen Namen etc. zu lang für eine Wildcard
+                case 'Individuell':
+                    // Falls wir es mal brauchen: Value von dem Auswahlfeld
+    				$varValue = $this->ansprechpartnercheckboxes;
+                    // "a:2:{i:0;s:34:"[32] Herr Doktor Mustermann Max";i:1;s:39:"[31] Herr Auszubildender Mustermann Markus";}"
+                    $this->Template->title = 'Individuelle Ansprechpartner';
+    				break;
+
+                // Die Auflistung der Abteilungen von denen die Ansprechpartner ausgegeben werden sollen in der Wildcard für diesen Fall der Abteilungseinfügeoption ausgeben werden
+                case 'Abteilungen':
+                    // "a:2:{i:0;s:2:"17";i:1;s:1:"4";}"
+                    $varValue = $this->departementcheckboxes;
+                    // Funktion der Helperclass um die IDs der Abteilungen aus dem Feldwert als Array zu bekommen
+                    $departementsIDs = HelperClass::getDepartementIds($varValue);
+                    // Hier wird in der FUnktion ein string mit Kommagetrennten Abteilungsnamen aus der tl_bemod_abteilungen_lang Tabelle zurück geben. ALPHABETISCH ABSTEIGEND SORTIERT!
+                    $departementsString = HelperClass::getDepartementNames($departementsIDs);
+                    // Alles wieder entsprechend anhand der abgefragten Daten zum Wildcard - Title hinzufügen
+                    $this->Template->title = 'Ansprechpartner aus Abteilung(en): ' . $departementsString;
+    				break;
+
+                // Wenn der Modus zur Ausgabe aller Ansprechpartner gewählt wurde schreiben wir das auch einfach
+                case 'Alle':
+    				$varValue = "all";
+                    $this->Template->title = 'Alle Ansprechpartner';
+    				break;
+
+                // Trifft keiner der Fälle ein, setzen wir der Sauberkeit im Backend einen default Wert
+    			default:
+                    $this->Template->title = 'Es wurde kein Einfügemodus ausgewählt. Bitte versuchen Sie es erneut!';
+    				break;
+    		}
+
+			// Backend Template parsen und entsprechend weitergeben
             return $this->Template->parse();
         }
 		// Funktion parsen und backend wildcard ausgeben
@@ -53,68 +94,72 @@ class Ansprechpartner extends \ContentElement
     }
 
 
-	// Die compile Funktion erzeugt die Ausgabe für das Frontend
+
+    // ===============================================FRONTEND===============================================
+	// Die compile Funktion erzeugt die Ausgabe für das Frontend, bzw. gibt die Werte an das obig definierte Template weiter und dieses gibt es dann im Frontend weiter aus.
     protected function compile()
     {
-		// Mit der Globalen $objPage initiiert man Meta Informationen zu der Webseite. Diese Infos kann man manchmal gebrauchen um Sprache der Seite und RootId (wie in diesem Fall) zu finden und abzuspeichern
-        global $objPage;
-        $rootId = $objPage->rootId;
+        // An das Template wird immer ein Array der Ansprechpartner Daten weiter gegeben – je nach dem welcher Einfügemodus gewählt wurde, welche Ansprechpartner betroffen sind, oder etwas im Nachhinein ein- oder ausgebländet wurde, varriieren die weitergegebenen Arrays je nach Einfügemodus etc.
+        // Je nach Einfügemodus müssen leicht unterschiedliche Datenbankabfragen getätigt werden, wesewegen wir zunächst wieder einen Switch Case Aufbau verwenden, den wir zum Schluss zusammenführen und ans Template weiter führen
+        switch ($this->ansprechpartnerType)
+        {
+            // Fall einzelner Ansprechpartner
+            case 'Einzeln':
+                // Wir ziehen uns aus dem DCA Feld vom Picker aus /Resources/contao/dca/tl_content.php und der /Widget/AnsprechpartnerPicker.php wieder die in dem Element gewählte Ansprechpartner Person mit seiner ID nach dem Schema [ID] raus und speichern Sie als Array in einer Variable über eine Helperclass Funktion ab
+                $ansprechpartnerId = HelperClass::getAnsprechpartnerIds($this->ansprechpartnerpicker);
+                // Jetzt fragen wir alle Informationen aus der Datenbank für die Kontaktperson mit dieser ID per SQL ab und speichern diese in einer Variable $res[].
+                // Wir definieren $res[] hier für eine Person auch als Array, damit wir in der Helperfunktion als auch im Template sowohl für eine Person (ein Array), als auch mehrere Personen (mehrere Arrays) keinen unterschiedlichen Aufbau für direkte Datensätze oder Arrays machen müssen und immer eine foreach Schleife verwenden können.
+                $res[] = HelperClass::getAnsprechpartnerDataById($ansprechpartnerId);
+                // Diese Funktion verarbeitet nun die per SQL abgefragten Datensätze im Array und bereitet einige Daten (Pfade zum Bild, rendern der eingegebenen Margins etc.) noch zentral in der Helperclass auf und gibt diese als Array(s) wieder aus.
+                $arrData = HelperClass::prepareArrayDataForTemplate($res);
 
-		// Wir ziehen uns aus dem DCA Feld vom Picker aus /Resources/contao/dca/tl_content.php und der /Widget/AnsprechpartnerPicker.php wieder die in dem Element gewählte Ansprechpartner Person mit seiner ID raus und speichern Sie in einer Variable über eine /Helper/Helperclass.php Funktion ab
-        $ansprechpartnerId = HelperClass::getAnsprechpartnerId($this->ansprechpartnerpicker); //Array mit IDs von den ausgewählten Abteilungen im Picker unter tl_bemod_abteilungen (pids von tl_bemod_abteilungen_lang)
-		// Jetzt fragen wir alle Informationen aus der Datenbank für die Kontaktperson mit dieser ID ab und speichern diese in einer Variable $res
-        $res = $this->Database->prepare("SELECT * FROM tl_bemod_ansprechpartner WHERE id = ?")->execute($ansprechpartnerId)->fetchAssoc();
+                // Hier wird nur noch das aufbereitete Array zum Template weiter übergeben – bereit zur Frontend Ausgabe
+                $this->Template->arrAnsprechData = $arrData;
 
-		// Jetzt übergeben wir an das Frontend Template von oben (weil die function protected ist wird das Template 'ce_ansprechpartner' von oben genommen) die ganzen abgefragten Daten der Datenbank aus der $res Variable, damit sie dort für eine Frontend Verarbeitung weiter verarbeitet werden können. Das machen wir für jedes wichtige Feld der Datenbank folglich einzeln.
-        $this->Template->ansprechId = $ansprechpartnerId; //Die ID vom Ansprechpartner in te_bemod_ansprechpartner
-        $this->Template->tstamp = $res['tstamp']; //Timestamp der Erstellung / des letzten Updates des Datensatzes. Folgende Angaben dann nur von diesem Ansprechpartner per SQL Abfrage.
-        $this->Template->salutation = $res['salutation']; //Anrede String
-        $this->Template->title = $res['title']; //Titel String
-        $this->Template->name = $res['name']; //Name String
-        $this->Template->firstname = $res['firstname']; //Vorname String
-        $this->Template->jobtitle = $res['jobtitle']; //Jobtitel String
-        $this->Template->email = $res['email']; //Email String
-        $this->Template->emailLinktext = $res['emailLinktext']; //Emaillinktext String
-        $this->Template->phone = preg_replace('/\s+/', '', $res['phone']); //Telefonnummer String ohne Whitespaces
-        $this->Template->phoneLinktext = $res['phoneLinktext']; //Telefonlinktext String
-        $this->Template->mobile = preg_replace('/\s+/', '', $res['mobile']); //Telefonnummer String ohne Whitespaces
-        $this->Template->mobileLinktext = $res['mobileLinktext']; //Mobilelinktext String
-        $this->Template->fax = $res['fax']; //Faxnummer String
-        $this->Template->more = $res['more']; //Textarea weitere Informationen String
-        $this->Template->published = $res['published']; //NULL oder 1 für published Checkbox
+                // Das wars. Die ganzen Daten aus dem Backend stehen jetzt bereit für das Frontend Template. Der Rest und die Ausgabe passieren für diese(s) Element(e) nun unter /Resources/contao/templates/ce_ansprechpartner.html5 oder deinen individuellen Templates
+                break;
 
-        // HelperClass Funktionen sind separate Funktionen unter /AnsprechpartnerBundle/Helper/HelperClass.php. Solche Funktionen werden ausgelagert wenn sie separat öfters von mehreren Klassen genutzt werden oder um den Code übersichtlicher zu halten.
-        $departementsIDs = HelperClass::getDepartementIds($res['departementCheckList']); // Array mit IDs von den ausgewählten Abteilungen im Picker unter tl_bemod_abteilungen (pids von tl_bemod_abteilungen_lang)
-        $departementsString = HelperClass::queryDepartementNames($departementsIDs); // String mit Kommagetrennten Abteilungsnamen aus der tl_bemod_abteilungen_lang Tabelle. ALPHABETISCH ABSTEIGEND SORTIERT!
-        $this->Template->departementCheckListReader = $departementsString;
+            // Fall individuelle Ansprechpartner Checkliste
+            case 'Individuell':
+                // Wir ziehen uns aus dem DCA Feld der Checkliste aus /Resources/contao/dca/tl_content.php und der /Widget/AnsprechpartnerPicker.php wieder die in dem Element gewählten Ansprechpartner Personen mit ihren IDs nach dem Schema [ID] raus und speichern Sie als Array in einer Variable über eine Helperclass Funktion ab
+                $ansprechpartnerIds = HelperClass::getAnsprechpartnerIds($this->ansprechpartnercheckboxes);
+                // Jetzt fragen wir alle Informationen aus der Datenbank für die Kontaktperson(en) mit dieser ID / den mehreren IDs per SQL ab und speichern diese in einer Variable $res[].
+                $res = HelperClass::getMultipleAnsprechpartnerDataByIds($ansprechpartnerIds);
+                // Diese Funktion verarbeitet nun die per SQL abgefragten Datensätze im Array und bereitet einige Daten (Pfade zum Bild, rendern der eingegebenen Margins etc.) noch zentral in der Helperclass auf und gibt diese als Array(s) wieder aus.
+                $arrData = HelperClass::prepareArrayDataForTemplate($res);
 
-        // Ein Bild wird nicht als Pfad direkt abgespeichert, sondern per UUID. Diese haben den Vorteil, dass die Datei verschoben werden kann und immer noch diese ID besitzt, man das Bild dadurch also nicht verliert im Frontend und der Datenbankzuweisung. Nachteil ist, dass wir hier noch ein bisschen proccessing machen müssen, um den Pfad wieder rauszubekommen
-        // In diesem Feld wurde in einer Checkbox angehakt / abgefragt, ob ein Bild hinzugefügt werden soll.
-        // Ein Objekt für das Bild erstellen anhand der UUID (findet Pfad vom Bild, sowie weitere Meta infos)
-        $objFile = \FilesModel::findByUuid($res['singleSRC']);
-        // Pfad zum Bild in der Variable $path ablegen, wenn das Bild existiert
-        if($objFile) {
-            $path = $objFile->path;
+                // Hier wird nur noch das aufbereitete Array zum Template weiter übergeben – bereit zur Frontend Ausgabe
+                $this->Template->arrAnsprechData = $arrData;
+                break;
+
+            // Fall Auflistung der Abteilungen von denen die individuellen Ansprechpartner ausgegeben werden sollen
+            case 'Abteilungen':
+                // Funktion der Helperclass um die IDs der Abteilungen aus dem Feldwert des Pickers als Array zu bekommen
+                $departementCheckboxesIDs = HelperClass::getDepartementIds($this->departementcheckboxes);
+                // Für diesen Fall nach gewählten Abteilungen müssen wir aus allen Ansprechpartnern rausfiltern, welcher der / den entsprchenden Abteilungen dazugehört. Dafür fragen wir erst einmal ALLE Ansprechpartner aus der Tabelle der DB ab. In der spezielen Aufbereitungsfunktion des Arrays geben wir dann die IDs der gewählten Abteilungen, sowie das Array aller Ansprechpartner weiter. Dann prüfen wir in der Aufbereitung welche Ansprechpartner aus allen möglichen deine ID der gewählten Abteilungen enthalten und geben diese weiter
+                $res = HelperClass::getAllAnsprechpartnerData();
+                // Diese Funktion verarbeitet nun die per SQL abgefragten Datensätze im Array und bereitet einige Daten (Pfade zum Bild, rendern der eingegebenen Margins etc.) noch zentral in der Helperclass auf und gibt diese als Array(s) wieder aus und vergleicht wie bereits erwähnt auch ob die gewählten Abteilungen deckend mit dem entsprechenden Ansprechpartner sind
+                $arrData = HelperClass::prepareArrayDataForTemplateByDepartementpicker($departementCheckboxesIDs, $res);
+
+                // Hier wird nur noch das aufbereitete Array zum Template weiter übergeben – bereit zur Frontend Ausgabe
+                $this->Template->arrAnsprechData = $arrData;
+                break;
+
+            // Wenn der Modus zur Ausgabe aller Ansprechpartner gewählt wurde schreiben wir das auch einfach so
+            case 'Alle':
+                // Ganz simpel in diesem letzten Fall – wir müssen für alle Ansprechpartner einfach nur alle gewählten Ansprechpartner aus der Datenbank abfragen, die veröffentlicht sind und im Array ablegen.
+                $res = HelperClass::getAllAnsprechpartnerData();
+                // Dieses Array wird dann wieder per Helperclass Funktion mit foreach aufbereitet
+                $arrData = HelperClass::prepareArrayDataForTemplate($res);
+                // Hier wird nur noch das aufbereitete Array zum Template weiter übergeben – bereit zur Frontend Ausgabe
+                $this->Template->arrAnsprechData = $res;
+                break;
+
+            // Trifft keiner der Fälle ein, setzen wir einen leeren default Wert für das Template, damit nicht nichts weiter gegeben wird.
+            default:
+                $emptyArray = [];
+                $this->Template->arrAnsprechData = $emptyArray;
+                break;
         }
-        // Wert aus Checkbox, ob Bild veröffentlicht werden soll, an Template weiter geben
-        $this->Template->addImage = $res['addImage'];
-        // Pfad zum Bild an Template geben
-        $this->Template->path = $path;
-        // Alttext an Template weiter geben
-        $this->Template->alt = $res['alt'];
-        // Bildunterschrift an Template weiter geben
-        $this->Template->caption = $res['caption'];
-        // In der Variable $size stecken die Werte für die Einstellungen der resizeImage Feldern, die werden mit deserialize zu einem Array gewandelt
-        $size = deserialize($res['resize']);
-        //Die Funktion getImage nimmt aus den Variablen von $size (PathToDefaultImage, Width, Height, Mode) die Einstellungen für das neue resize Bild, die ausgewählt wurden und generiert dieses Bild, speichert es unter /assets/images/.. ab, sowie speichert den Pfad dort hin unter $src ab
-        $src = $this->getImage($path, $size[0], $size[1], $size[2]);
-        // Der Pfad zum neuen resize Bild wird an das Template gegeben
-        $this->Template->resizePath = $src;
-        // Die 4 Eingabefelder "margin" aus dem DCA werden hier über generateMargin und deserialize Funktion in inline CSS Format umgewandelt und im Template dann weiter- und ausgegeben
-        $margin = $this->generateMargin(deserialize($res['margin']), 'margin');
-        // Und ab weiter zum Template damit
-        $this->Template->margin = $margin;
-
-		// Das wars. Die ganzen Daten aus dem Backend stehen jetzt bereit für das Frontend Template. Der Rest und die Ausgabe passieren für diese(s) Element(e) nun unter /Resources/contao/templates/ce_ansprechpartner.html5 oder deinen individuellen Templates
     }
 }
