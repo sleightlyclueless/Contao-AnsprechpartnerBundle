@@ -11,7 +11,7 @@
 // Wir definieren hier nun fest den Namespace des Bundles zu dieser Datei – wird in der /Resources/contao/config/config.php verwendet um auf diese Class für die CTE Erweiterung per namespace zu verweisen
 namespace ixtensa\AnsprechpartnerBundle\Classes;
 
-// Wir holen uns alle externen Helperclass Funktionen durch die unter /Helper/Helperclass.php erstellten Funktionen immer nach dem Schema HelperClass::Funktionsname. Die einzelnen Funktionen sind in der Helperclass Datei näher beschrieben und dienen dem zentralen Verwenden und auslagern von Code zur modularen und besseren Lesbarkeit
+// Wir holen uns alle externen Helperclass Funktionen durch die unter /Helper/Helperclass.php erstellten Funktionen immer nach dem Schema HelperClass::Funktionsname. Die einzelnen Funktionen sind in der Helperclass Datei näher beschrieben und dienen dem zentralen Verwenden und auslagern von Code zur modularen und besseren Lesbarkeit – dazu verwenden wir per use den in der Helperclass erstellten Namespace
 use ixtensa\AnsprechpartnerBundle\Helper\HelperClass;
 
 
@@ -127,7 +127,6 @@ class Ansprechpartner extends \ContentElement
                 $res = HelperClass::getMultipleAnsprechpartnerDataByIds($ansprechpartnerIds);
                 // Diese Funktion verarbeitet nun die per SQL abgefragten Datensätze im Array und bereitet einige Daten (Pfade zum Bild, rendern der eingegebenen Margins etc.) noch zentral in der Helperclass auf und gibt diese als Array(s) wieder aus.
                 $arrData = HelperClass::prepareArrayDataForTemplate($res);
-
                 // Hier wird nur noch das aufbereitete Array zum Template weiter übergeben – bereit zur Frontend Ausgabe
                 $this->Template->arrAnsprechData = $arrData;
                 break;
@@ -152,7 +151,7 @@ class Ansprechpartner extends \ContentElement
                 // Dieses Array wird dann wieder per Helperclass Funktion mit foreach aufbereitet
                 $arrData = HelperClass::prepareArrayDataForTemplate($res);
                 // Hier wird nur noch das aufbereitete Array zum Template weiter übergeben – bereit zur Frontend Ausgabe
-                $this->Template->arrAnsprechData = $res;
+                $this->Template->arrAnsprechData = $arrData;
                 break;
 
             // Trifft keiner der Fälle ein, setzen wir einen leeren default Wert für das Template, damit nicht nichts weiter gegeben wird.

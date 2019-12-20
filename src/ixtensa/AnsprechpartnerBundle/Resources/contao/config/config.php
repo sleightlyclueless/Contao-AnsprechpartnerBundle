@@ -46,15 +46,14 @@
  $GLOBALS['TL_CTE']['Ixtensa']['ansprechpartner'] = 'ixtensa\\AnsprechpartnerBundle\\Classes\\Ansprechpartner';
 
 
+ // Backend CSS und JS Dateien hinzufügen
+ // Manchmal nimmt Contao / Browser / Cache / Composer (???) aus der den hideInNavigation => true nicht. Deswegen wird dieser in /src/ixtensa/AnsprechpartnerBundle/Resources/public/css/be.css noch einmal ausgeblendet
+  if (TL_MODE == 'BE') {
+      $GLOBALS['TL_CSS'][] = 'bundles/ansprechpartner/css/be.css';
+  }
 
  // INFOS zu weiteren möglichen Konfigurationen
  // =====================================================================================================================================
-
-// Backend CSS und JS Dateien hinzufügen
-// Manchmal nimmt Contao / Browser / Cache / Composer (???) aus der den hideInNavigation => true nicht. Deswegen wird dieser in /src/ixtensa/AnsprechpartnerBundle/Resources/public/css/be.css noch einmal ausgeblendet
- if (TL_MODE == 'BE') {
-     $GLOBALS['TL_CSS'][] = 'bundles/ansprechpartner/css/be.css';
- }
 
 
  // FRONT END MODULES
