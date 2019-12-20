@@ -1,5 +1,4 @@
 <!-- Sehen Sie Ihre(n) Ansprechpartner nicht? Vielleicht ist er in der Verwaltungsoberfläche oder dem Artikel selbst ausgeblendet?-->
-<?php dump($this); ?>
 <?php foreach ($this->arrData['arrAnsprechData'] as $data): ?>
     <?php if($data["published"]): ?>
         <div itemscope itemtype="http://schema.org/Person" <?php echo $this->cssID; ?> class="ce_ix_ansprechpartner grid-container block columns small-12 <?php echo $this->class; ?>">

@@ -17,7 +17,7 @@ class HelperClass extends \Backend
         $this->import('Database');
     }
 
-
+    // Liefert Resultat einer SQL Abfrage der tl_bemod_ansprechpartner mit einer entsprechenden ID zurück
     public function getAnsprechpartnerDataById($ansprechpartnerId) {
         if (empty($ansprechpartnerId)) {
             $ansprechpartnerId = "NULL";
@@ -26,6 +26,7 @@ class HelperClass extends \Backend
         return $res;
     }
 
+    // Liefert Resultat einer SQL Abfrage der tl_bemod_ansprechpartner mit mehreren entsprechenden IDs zurück
     public function getMultipleAnsprechpartnerDataByIds($arrIds) {
         // Der global $objPage beinhaltet abrufbare Metainformationen der Seite, wir nutzen ihn für die 'language' der Seite später
         global $objPage;
@@ -37,6 +38,7 @@ class HelperClass extends \Backend
         $query = "SELECT * FROM tl_bemod_ansprechpartner WHERE ";
 
         $pidQuery = "id IN(";
+        //TODO mit foreach umschreiben
         for ($counter=0; $counter < $maxAbteilungen; $counter++) {
             // Abhängen letztes Element
             $currentId = array_pop($arrIds);
@@ -66,12 +68,13 @@ class HelperClass extends \Backend
         return $fetchRes;
     }
 
+    // Liefert Resultat einer SQL Abfrage der tl_bemod_ansprechpartner mit allen Daten zurück
     public function getAllAnsprechpartnerData() {
         $res = \Database::getInstance()->prepare("SELECT * FROM tl_bemod_ansprechpartner WHERE published = 1 ORDER BY `sortingIndex` DESC, `name` ASC")->execute()->fetchAllAssoc();
         return $res;
     }
 
-    // Aus einem String: "[ID] Begrüßung Titel Name Vorname" ein Array mit den entzogenen IDs des Ansprechpartners machen.
+    // Aus einem String: "[ID] Begrüßung Titel Name Vorname (...)" ein Array mit den entzogenen IDs des Ansprechpartners machen.
     public function getAnsprechpartnerIds($str)
     {
         // We see the IDs are always imbedded within " Symbols. These are our start and end inicators
@@ -282,6 +285,7 @@ class HelperClass extends \Backend
         return $departementsString;
     }
 
+    // Bearbeitet die generalisierten Daten aus einer SQL Abfrage der Tabelle (Bild pfade rausziehen, margin setzen etc.) und liefert diese dann an die /Classes Funktion zurück, damit wir hier die Daten ans Template übergeben können
     public function prepareArrayDataForTemplate($res)
     {
         foreach($res as $key => $currentArray) {
@@ -317,6 +321,7 @@ class HelperClass extends \Backend
         return $res;
     }
 
+    // Wie prepareArrayDataForTemplate, nur dass hier noch die IDs der Abteilungen berücksichtigt werden müssen
     public function prepareArrayDataForTemplateByDepartementpicker($departementCheckboxesIDs, $res)
     {
         foreach($res as $key => $currentArray) {
