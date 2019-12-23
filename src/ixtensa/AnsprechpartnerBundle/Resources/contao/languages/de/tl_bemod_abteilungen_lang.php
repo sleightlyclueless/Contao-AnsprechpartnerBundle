@@ -25,5 +25,5 @@ $GLOBALS['TL_LANG'][$strName]['show'] = ['Informationen zur Übersetzung anzeige
 $GLOBALS['TL_LANG'][$strName]['name_legend'] = 'Übersetzungen';
 
 // Eigene Felder (Fields in gleichnamiger DCA.php) benennen / betexten. Es gibt hier immer ein Array Format. An erster Stelle ist die Überschrift, an zweiter Stelle die 'Erklärung', die unter dem Feld steht.
-$GLOBALS['TL_LANG'][$strName]['abtname_lang'] = ['Sprachkürzel', 'Bitte geben Sie die Sprache der Seite gemäß des ISO-639-1 Standards ein (z.B. "de" für Deutsch oder "de-CH" für Schweizerdeutsch, "en" für Englisch usw.)'];
+$GLOBALS['TL_LANG'][$strName]['abtname_lang'] = ['Sprachkürzel', 'Bitte geben Sie die Sprache der Übersetzung gemäß des ISO-639-1 Standards ein (z.B. "de" für Deutsch, "en" für Englisch usw.)'];
 $GLOBALS['TL_LANG'][$strName]['abtname_bez'] = ['Bezeichnung', 'Hier können Sie den gewünschten Abteilungsnamen in Ihrer Sprache eingeben, der später ausgegeben werden soll'];
