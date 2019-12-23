@@ -4,7 +4,7 @@
  * @package   AnsprechpartnerBundle
  * @author    (c) IXTENSA GmbH & Co. KG Internet und Webagentur -- Sebastian Zill
  * @license   GNU LGPL 3+
- * @copyright (c) 2019
+ * @copyright (c) 2020
  */
 
 // DCA Erweiterungen: Backend von Contao um Data Container Arrays Erweitern: Zusätzliche Eingabefeleder für verschiedenste Bereiche erstellen und konfigurieren. z.B. Für Backend Module
@@ -77,7 +77,7 @@ $GLOBALS['TL_DCA'][$strName] = array
 			)
 		),
 
-        // Operations sind sachen wie Kopieren, Editieren, Löschen. Hier kann man die von Contao gegebenen Operationen für die Felder hinzufügen. Wenn man welche nicht dabei haben will darf man sie hier einfach nicht hinzuschreiben (oder auskommentieren)
+        // Operations sind Sachen wie Kopieren, Editieren, Löschen. Hier kann man die von Contao gegebenen Operationen für die Felder hinzufügen. Wenn man welche nicht dabei haben will darf man sie hier einfach nicht hinzuschreiben (oder auskommentieren)
 		'operations' => array
 		(
             // Bearbeiten des Inhalts des Elements (gelber Stift)
@@ -131,7 +131,7 @@ $GLOBALS['TL_DCA'][$strName] = array
 	'palettes' => array
 	(
         '__selector__'                => array('addImage'),
-		'default' => '{name_legend},salutation,title,name,firstname;{meta_legend},jobtitle,email,emailLinktext,phone,phoneLinktext,mobile,mobileLinktext,fax,departementCheckList,more,addImage;{sorting_legend},sortingIndex;{published_legend},published;'
+		'default' => '{name_legend},salutation,title,name,firstname;{meta_legend},departementCheckList,jobtitle,email,emailLinktext,phone,phoneLinktext,mobile,mobileLinktext,fax,more,addImage;{sorting_legend},sortingIndex;{published_legend},published;'
 	),
 
     // Subpalettes: Subpalettes sind die Unter - Überschriften, die weitere Elemente beinhalten. In diesem Fall ist 'addImage' eine Checkbox und wenn man diese angehakt hat, sieht man erst das 'image' Feld
@@ -229,6 +229,31 @@ $GLOBALS['TL_DCA'][$strName] = array
                                         ),
         	'sql'                     => "varchar(255) NOT NULL default ''"
         ),
+        // SONDERFALL:
+        // Eigenes Widget Checkbox Menü Feld mit Abteilungen aus Abteilungserweiterung, die in Checklistenformat ausgegeben werden (Dateien: config, tl_bemod_abteilungen, /Widget/Abtmenu.php)
+        'departementCheckList' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG'][$strName]['departementCheckList'],
+			'exclude'                 => true,
+			'search'                  => true,
+            'sorting'                 => true,
+			'filter'                  => true,
+            'flag'                    => 1,
+            'inputType'               => 'AbtMenu',
+            'foreignKey'              => 'tl_bemod_abteilungen.abtname',
+            'eval'                    => array(
+                                            'feEditable'=>true,
+                                            'feViewable'=>true,
+                                            'feGroup'=>'qualifications',
+                                            'multiple'=>true,
+                                            'mandatory'=>true,
+                                            'tl_class'=>'clr'
+                                        ),
+            // Es handelt sich hier um ein eigenes Widget. Um auch in der Datenbank übernehmen zu können, was wir eingegeben haben, damit das nicht wieder vergessen wird, müssen wir callback Funktionen für Speichern dieser Felder und Laden dieser Felder anlegen. Die Funktionen, die die Daten dann in Datenbnak und Contao abspeichern kommen ganz unten in DIESER Datei unter den Fieldconfigurations
+            'save_callback'			  => array($strName, 'saveAbteilungen'),
+			'load_callback'			  => array($strName, 'getSelectedAbteilungen'),
+			'sql'                     => "blob NULL"
+		),
         // Textfeld für Berufsbezeichnung
         'jobtitle' => array
         (
@@ -363,31 +388,6 @@ $GLOBALS['TL_DCA'][$strName] = array
                                             ),
         	'sql'                     => "varchar(64) NOT NULL default ''"
         ),
-        // SONDERFALL:
-        // Eigenes Widget Checkbox Menü Feld mit Abteilungen aus Abteilungserweiterung, die in Checklistenformat ausgegeben werden (Dateien: config, tl_bemod_abteilungen, /Widget/Abtmenu.php)
-        'departementCheckList' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG'][$strName]['departementCheckList'],
-			'exclude'                 => true,
-			'search'                  => true,
-            'sorting'                 => true,
-			'filter'                  => true,
-            'flag'                    => 1,
-            'inputType'               => 'AbtMenu',
-            'foreignKey'              => 'tl_bemod_abteilungen.abtname',
-            'eval'                    => array(
-                                            'feEditable'=>true,
-                                            'feViewable'=>true,
-                                            'feGroup'=>'qualifications',
-                                            'multiple'=>true,
-                                            'mandatory'=>true,
-                                            'tl_class'=>'clr'
-                                        ),
-            // Es handelt sich hier um ein eigenes Widget. Um auch in der Datenbank übernehmen zu können, was wir eingegeben haben, damit das nicht wieder vergessen wird, müssen wir callback Funktionen für Speichern dieser Felder und Laden dieser Felder anlegen. Die Funktionen, die die Daten dann in Datenbnak und Contao abspeichern kommen ganz unten in DIESER Datei unter den Fieldconfigurations
-            'save_callback'			  => array($strName, 'saveAbteilungen'),
-			'load_callback'			  => array($strName, 'getSelectedAbteilungen'),
-			'sql'                     => "blob NULL"
-		),
         // Textarea für weitere Angaben mit tinyMCE Formatierungen
         'more' => array
         (
@@ -398,7 +398,8 @@ $GLOBALS['TL_DCA'][$strName] = array
 			'filter'                  => false,
         	'inputType'               => 'textarea',
         	'eval'                    => array(
-                                            'rte'=>'tinyMCE'
+                                            'rte'=>'tinyMCE',
+                                            'tl_class'=>'clr'
                                         ),
         	'sql'                     => "mediumtext NULL"
         ),

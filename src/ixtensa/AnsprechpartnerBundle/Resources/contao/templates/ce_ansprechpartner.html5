@@ -32,9 +32,17 @@
                         <span itemprop="familyName"><?= $data["name"]?></span>
                     </p>
                 <?php endif; ?>
+                <?php if($data["departementCheckList"]): ?>
+                    <p itemprop="department" class="departements"><?= $data["departementCheckList"] ?></p>
+        		<?php endif; ?>
                 <?php if($data["jobtitle"]): ?>
                     <p class="jobtitle">
                         <span itemprop="jobTitle"><?= $data["jobtitle"] ?></span>
+                    </p>
+        		<?php endif; ?>
+                <?php if($data["email"]): ?>
+                    <p class="email">
+                        <a itemprop="email" href="mailto:<?= $data["email"] ?>"><?php if($data["emailLinktext"]): ?><?= $data["emailLinktext"] ?><?php else: ?><?= $data["email"] ?><?php endif; ?></a>
                     </p>
         		<?php endif; ?>
                 <?php if($data["phone"]): ?>
@@ -51,14 +59,6 @@
         			<p class="fax">
                         <span><?= $data["fax"] ?></span>
                     </p>
-        		<?php endif; ?>
-                <?php if($data["email"]): ?>
-                    <p class="email">
-                        <a itemprop="email" href="mailto:<?= $data["email"] ?>"><?php if($data["emailLinktext"]): ?><?= $data["emailLinktext"] ?><?php else: ?><?= $data["email"] ?><?php endif; ?></a>
-                    </p>
-        		<?php endif; ?>
-                <?php if($data["departementCheckList"]): ?>
-                    <p itemprop="department" class="departements"><?= $data["departementCheckList"] ?></p>
         		<?php endif; ?>
                 <?php if($data["more"]): ?>
         			<div class="more"><?= $data["more"] ?></div>

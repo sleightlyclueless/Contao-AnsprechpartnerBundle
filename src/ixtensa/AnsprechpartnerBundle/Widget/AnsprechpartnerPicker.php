@@ -4,10 +4,14 @@
  * @package   AnsprechpartnerBundle
  * @author    (c) IXTENSA GmbH & Co. KG Internet und Webagentur -- Sebastian Zill
  * @license   GNU LGPL 3+
- * @copyright (c) 2019
+ * @copyright (c) 2020
  */
 
-namespace ixtensa\AnsprechpartnerBundle\Widget;
+ // Eigenes Widget Checkbox Menü Feld mit Abteilungen aus Abteilungserweiterung, die in Checklistenformat ausgegeben werden (Dateien: config, tl_bemod_abteilungen, /Widget/AnsprechPartnerCheckboxes.php)
+ // Der Code wurde vom Contao Core verwendet und leicht abgeändert (vendor/contao/core-bundle/src/Resources/contao/widgets/CheckBox.php)
+
+ // Namespace: Der eindeutige Pfad, der auf diese entsprechende PHP Datei zeigt, damit sie von anderen Orten aus eindeutig aufgerufen und oder referenziert werden kann.
+ namespace ixtensa\AnsprechpartnerBundle\Widget;
 
 /**
  * Provide methods to handle select menus.

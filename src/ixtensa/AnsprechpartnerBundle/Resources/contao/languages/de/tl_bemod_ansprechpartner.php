@@ -4,7 +4,7 @@
  * @package   AnsprechpartnerBundle
  * @author    (c) IXTENSA GmbH & Co. KG Internet und Webagentur -- Sebastian Zill
  * @license   GNU LGPL 3+
- * @copyright (c) 2019
+ * @copyright (c) 2020
  */
 
 // Übersetzen und betexten von in der /Resources/contao/dca/tl_bemod_abteilungen.php erstellten DCA Feldern
@@ -32,13 +32,11 @@ $GLOBALS['TL_LANG'][$strName]['toggle'] = ['Ansprechpartner ein-/ausblenden', 'A
 // Betextung der Element Informationen anzeigen Operation (Informationssymol)
 $GLOBALS['TL_LANG'][$strName]['show'] = ['Informationen zum Ansprechpartner anzeigen', 'Informationen zum Ansprechpartner ID %s anzeigen'];
 
-
 // Eigene Legenden / Bereichsüberschriften (Palettes in DCA.php) benennen / betexten
 $GLOBALS['TL_LANG'][$strName]['name_legend'] = 'Anrede und Name';
 $GLOBALS['TL_LANG'][$strName]['meta_legend'] = 'Weitere Daten zur Person';
 $GLOBALS['TL_LANG'][$strName]['sorting_legend'] = 'Sortierpriorität';
 $GLOBALS['TL_LANG'][$strName]['published_legend'] = 'Ansprechpartner veröffentlichen';
-
 
 // Eigene Felder (Fields in gleichnamiger DCA.php) benennen / betexten. Es gibt hier immer ein Array Format. An erster Stelle ist die Überschrift, an zweiter Stelle die 'Erklärung', die unter dem Feld steht.
 $GLOBALS['TL_LANG'][$strName]['salutation'] = ['Anrede', 'Hier können Sie die gewünschte Anrede zu der Kontaktperson auswählen'];

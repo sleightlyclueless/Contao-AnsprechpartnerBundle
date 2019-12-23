@@ -1,6 +1,13 @@
 <?php
 
 /**
+ * @package   AnsprechpartnerBundle
+ * @author    (c) IXTENSA GmbH & Co. KG Internet und Webagentur -- Sebastian Zill
+ * @license   GNU LGPL 3+
+ * @copyright (c) 2020
+ */
+ 
+/**
  * Namespace
  */
 namespace ixtensa\AnsprechpartnerBundle\Helper;
@@ -17,6 +24,7 @@ class HelperClass extends \Backend
         $this->import('Database');
     }
 
+
     // Liefert Resultat einer SQL Abfrage der tl_bemod_ansprechpartner mit einer entsprechenden ID zurück
     public function getAnsprechpartnerDataById($ansprechpartnerId) {
         if (empty($ansprechpartnerId)) {
@@ -26,58 +34,59 @@ class HelperClass extends \Backend
         return $res;
     }
 
+
     // Liefert Resultat einer SQL Abfrage der tl_bemod_ansprechpartner mit mehreren entsprechenden IDs zurück
     public function getMultipleAnsprechpartnerDataByIds($arrIds) {
         // Der global $objPage beinhaltet abrufbare Metainformationen der Seite, wir nutzen ihn für die 'language' der Seite später
         global $objPage;
-        // Globals
-        // $maxAbteilungen ist wichtig für die kommenden for Schleifen. Irgendwann müssen diese Abbrechen -- per default auf 1000 gesetzt. Unwahrscheinlich hoch und irgendwann muss Schleife schließlich aufhören.
-        $maxAbteilungen = 1000;
 
-        // Wir bauen eine query für die Datenbank zusammen, wir haben die IDs der Abteilungen und damit auch PIDs von der Übersetzungstabelle
+        // Wir bauen eine query für die Datenbank zusammen. Wir haben die IDs der Ansprechpartner in der Variable $arrIds an uns übergeben bekommen, die wir jetzt nutzen können um eine SQL Abfrage für die Tabelle der Ansprechpartner zu bauen
         $query = "SELECT * FROM tl_bemod_ansprechpartner WHERE ";
-
         $pidQuery = "id IN(";
-        //TODO mit foreach umschreiben
-        for ($counter=0; $counter < $maxAbteilungen; $counter++) {
-            // Abhängen letztes Element
-            $currentId = array_pop($arrIds);
-            // Wenn es nicht leer ist, bau eine WHERE Klausel mit IN daraus
-            if (!empty($currentId)) {
-                $pidQuery .= " $currentId";
-                $pidQuery .= ",";
-            // Wenn das Array leer ist, brich die FOR Schleife ab und hänge die erstellte WHERE IN Klausel an die Queries an und schließe Sie mit einem ) ab nachdem du das letzte Komma entfernt hast
-            } else {
-                if ($counter == 0) {
-                    $pidQuery .= "NULL";
-                }
-                if ($counter > 0) {
+
+        // Wenn das Array mir den IDs von Anfang an leer ist, schreiben wir in die ID Abfrage eine NULL für einen leeren Wert, damit wir keine SQL Errors bekommen und schließen die Abfrage mit einem ')' ab
+        if (empty($arrIds)) {
+            $pidQuery .= "NULL";
+            $pidQuery .= ")";
+
+        // Wenn wir ein existierendes Array übergeben bekommen haben, dann bauen wir daraus eine IN(xx,yy,zz) Abfrage für die IDs
+        } else {
+            // Wir brauchen noch einen $counter und eine $arrLen Gesamtlänge des Arrays, um den letzten Durchlauf der foreach Schleife abfragen zu können, um die Klammer zu setzen zu können und das letzte Komma zu entfernen
+            $counter = 0;
+            $arrLen = count($arrIds);
+            foreach($arrIds as $key => $currentArray) {
+                // Füge die jetzige ID aus dem Array an die pidQuery
+                $currentId = $arrIds[$key];
+                $pidQuery .= "$currentId".",";
+                // Wenn wir den letzten Durchlauf haben wie gesagt: Klammer schließen und Komma entfernen
+                if ($counter == $arrLen - 1) {
                     $pidQuery = substr($pidQuery, 0, -1);
+                    $pidQuery .= ")";
                 }
-                $pidQuery .= ")";
-                // Wir sind durch alle IDs durch oder durch die maximale erlaubte Anzahl an IDs ($maxAbteilungen) -> die erweiterte $pidQuery zu den Queries anhängen
-                $query .= $pidQuery;
-                break;
+                // Erhöhe den Counter nach jedem Durchlauf des Arrays, um den Vergleich mit $arrLen für den letzten Durchlauf vollziehen zu können
+                $counter++;
             }
         }
+        $query .= $pidQuery;
         // Jetzt hängen wir noch eine AND Klausel für die Sprache an, sowie eine Sortierung der Abteilungsnamen von A - Z
         $query .= " AND published = 1 ORDER BY `sortingIndex` DESC, `name` ASC";
 
-        $res = \Database::getInstance()->prepare($query)->execute();
-        $fetchRes = $res->fetchAllAssoc();
-        return $fetchRes;
+        // Datenbankabfrage abfeuern und geparstes Resultat zurück geben
+        $res = \Database::getInstance()->prepare($query)->execute()->fetchAllAssoc();
+        return $res;
     }
 
-    // Liefert Resultat einer SQL Abfrage der tl_bemod_ansprechpartner mit allen Daten zurück
+    // Liefert Resultat einer SQL Abfrage der tl_bemod_ansprechpartner mit und für alle(n) Daten zurück
     public function getAllAnsprechpartnerData() {
         $res = \Database::getInstance()->prepare("SELECT * FROM tl_bemod_ansprechpartner WHERE published = 1 ORDER BY `sortingIndex` DESC, `name` ASC")->execute()->fetchAllAssoc();
         return $res;
     }
 
+
     // Aus einem String: "[ID] Begrüßung Titel Name Vorname (...)" ein Array mit den entzogenen IDs des Ansprechpartners machen.
     public function getAnsprechpartnerIds($str)
     {
-        // We see the IDs are always imbedded within " Symbols. These are our start and end inicators
+        // We see the IDs are always imbedded within these Symbols. These are our start and end inicators
         $startDelimiter = '[';
         $endDelimiter = ']';
         // We pre - create an array to add our contents to
@@ -138,70 +147,66 @@ class HelperClass extends \Backend
     }
 
 
-
     // Aus einem Array mit IDs die Namen aus der Tabelle tl_bemod_abteilungen_lang ziehen und Kommagetrennt in einem String speichern
     public function getDepartementNames($arrIds)
     {
         // Der global $objPage beinhaltet abrufbare Metainformationen der Seite, wir nutzen ihn für die 'language' der Seite später
         global $objPage;
 
-        // Globals
-        // $maxAbteilungen ist wichtig für die kommenden for Schleifen. Irgendwann müssen diese Abbrechen -- per default auf 1000 gesetzt. Unwahrscheinlich hoch und irgendwann muss Schleife schließlich aufhören.
-        $maxAbteilungen = 1000;
-
         // Wir bauen eine query für die Datenbank zusammen, wir haben die IDs der Abteilungen und damit auch PIDs von der Übersetzungstabelle
         $query = "SELECT abtname FROM tl_bemod_abteilungen WHERE ";
 
         // Wir bauen eine IN query für PIDs separat auf und hängen Sie dann an die Query dran
         $pidQuery = "id IN(";
-        // Das Array mit den IDs (z.B. Array ( [0] => 7 [1] => 9 [2] => 4 )) durchlaufen wir jetzt so oft, bis wir kein neues Element mehr 'poppen', also abhängen können -> Bis das Array leer ist
-        // Für jeden gefunden Eintrag unter IDs erweitern wir die SQL Query um eine WHERE Klausel mit OR und den PIDs, damit bei mehreren PIDs mehrere Einträge ausgegeben werden.
-        // TODO Mit foreach Schleife umschreiben
-        for ($counter=0; $counter < $maxAbteilungen; $counter++) {
-            // Abhängen letztes Element
-            $currentId = array_pop($arrIds);
-            // Wenn es nicht leer ist, bau eine WHERE Klausel mit IN daraus
-            if (!empty($currentId)) {
-                $pidQuery .= " $currentId";
-                $pidQuery .= ",";
-            // Wenn das Array leer ist, brich die FOR Schleife ab und hänge die erstellte WHERE IN Klausel an die Queries an und schließe Sie mit einem ) ab nachdem du das letzte Komma entfernt hast
-            } else {
-                if ($counter == 0) {
-                    $pidQuery .= "NULL";
-                }
-                if ($counter > 0) {
+        // Das Array mit den IDs (z.B. Array ( [0] => 7 [1] => 9 [2] => 4 )) durchlaufen wir jetzt
+        // Wenn das Array mir den IDs von Anfang an leer ist, schreiben wir in die ID Abfrage eine NULL für einen leeren Wert, damit wir keine SQL Errors bekommen und schließen die Abfrage mit einem ')' ab
+        if (empty($arrIds)) {
+            $pidQuery .= "NULL";
+            $pidQuery .= ")";
+
+        // Wenn wir ein existierendes Array übergeben bekommen haben, dann bauen wir daraus eine IN(xx,yy,zz) Abfrage für die IDs
+        } else {
+            // Wir brauchen noch einen $counter und eine $arrLen Gesamtlänge des Arrays, um den letzten Durchlauf der foreach Schleife abfragen zu können, um die Klammer zu setzen zu können und das letzte Komma zu entfernen
+            $counter = 0;
+            $arrLen = count($arrIds);
+            foreach($arrIds as $key => $currentArray) {
+                // Füge die jetzige ID aus dem Array an die pidQuery
+                $currentId = $arrIds[$key];
+                $pidQuery .= "$currentId".",";
+                // Wenn wir den letzten Durchlauf haben wie gesagt: Klammer schließen und Komma entfernen
+                if ($counter == $arrLen - 1) {
                     $pidQuery = substr($pidQuery, 0, -1);
+                    $pidQuery .= ")";
                 }
-                $pidQuery .= ")";
-                // Wir sind durch alle IDs durch oder durch die maximale erlaubte Anzahl an IDs ($maxAbteilungen) -> die erweiterte $pidQuery zu den Queries anhängen
-                $query .= $pidQuery;
-                break;
+                // Erhöhe den Counter nach jedem Durchlauf des Arrays, um den Vergleich mit $arrLen für den letzten Durchlauf vollziehen zu können
+                $counter++;
             }
         }
+        $query .= $pidQuery;
 
         // Feuer die SQL Abfrage ab und speichere das Ergebnis unter einer $fetchRes Variable
-        $res = \Database::getInstance()->prepare($query)->execute();
-        $fetchRes = $res->fetchAllAssoc();
+        $res = \Database::getInstance()->prepare($query)->execute()->fetchAllAssoc();
         // Jetzt haben wir ein Array mit den Abteilungsnamen und müssen jetzt noch einen String daraus machen, damit wir leichter verarbeiten können
         // Array ( [0] => Array ( [abtname_bez] => Development ) [1] => Array ( [abtname_bez] => Technik ) [2] => Array ( [abtname_bez] => Yes ) )
 
-
         // String aus Array aufbereiten
         $departementsString = "";
-        // TODO Mit foreach Schleife umschreiben
-        for ($counter=0; $counter < $maxAbteilungen; $counter++) {
-            $departementName = $fetchRes[$counter]['abtname'];
-            if (!empty($departementName)) {
-                $departementsString .= "$departementName";
-                $departementsString .= ", ";
-            } else {
+        $counter = 0;
+        $arrLen = count($arrIds);
+        foreach($res as $key => $currentArray) {
+            // Für jeden Array Durchlauf die Abgefragen Abteilungsnamen an den String anknüpfen und mit Komma trennen
+            $departementName = $res[$key]['abtname'];
+            $departementsString .= "$departementName".", ";
+            // Im letzten errechneten Durchlauf das letzte Leerzeichen und Komma entfernen
+            if ($counter == $arrLen - 1) {
                 $departementsString = substr($departementsString, 0, -2);
-                break;
             }
+            $counter++;
         }
         // Fertig, String mit Kommaliste im FE ausgeben. ("Development, Technik, Yes")
         return $departementsString;
     }
+
 
     // Aus einem Array mit IDs die Namen aus der Tabelle tl_bemod_abteilungen_lang ziehen und Kommagetrennt in einem String speichern
     public function getDepartementTranslations($arrIds)
@@ -209,45 +214,43 @@ class HelperClass extends \Backend
         // Der global $objPage beinhaltet abrufbare Metainformationen der Seite, wir nutzen ihn für die 'language' der Seite später
         global $objPage;
 
-        // Globals
-        // $maxAbteilungen ist wichtig für die kommenden for Schleifen. Irgendwann müssen diese Abbrechen -- per default auf 1000 gesetzt. Unwahrscheinlich hoch und irgendwann muss Schleife schließlich aufhören.
-        $maxAbteilungen = 1000;
         // Sprache in String wandeln und abspeichern – wird ganz zum Schluss an SQL query angehängt.
         $language = "'".$objPage->language."'";
         $fallbackLanguage = "'de'";
 
         // Wir bauen eine query für die Datenbank zusammen, wir haben die IDs der Abteilungen und damit auch PIDs von der Übersetzungstabelle
         $query = "SELECT abtname_bez FROM tl_bemod_abteilungen_lang WHERE ";
-        // Die $fallbackQuery ist dazu da, wenn in der entsprechenden Sprache keine Übersetzungen vorliegen, nehmen wir die DE Übersetzungen
+        // Die $fallbackQuery ist dazu da, wenn in der entsprechenden Sprache keine Übersetzungen vorliegen, nehmen wir als Standard die DE Übersetzungen
         $fallbackQuery = "SELECT abtname_bez FROM tl_bemod_abteilungen_lang WHERE ";
 
         // Wir bauen eine IN query für PIDs separat auf und hängen Sie dann an die Query dran
         $pidQuery = "pid IN(";
-        // Das Array mit den IDs (z.B. Array ( [0] => 7 [1] => 9 [2] => 4 )) durchlaufen wir jetzt so oft, bis wir kein neues Element mehr 'poppen', also abhängen können -> Bis das Array leer ist
-        // Für jeden gefunden Eintrag unter IDs erweitern wir die SQL Query um eine WHERE Klausel mit OR und den PIDs, damit bei mehreren PIDs mehrere Einträge ausgegeben werden.
-        // TODO Mit foreach Schleife umschreiben
-        for ($counter=0; $counter < $maxAbteilungen; $counter++) {
-            // Abhängen letztes Element
-            $currentId = array_pop($arrIds);
-            // Wenn es nicht leer ist, bau eine WHERE Klausel mit IN daraus
-            if (!empty($currentId)) {
-                $pidQuery .= " $currentId";
-                $pidQuery .= ",";
-            // Wenn das Array leer ist, brich die FOR Schleife ab und hänge die erstellte WHERE IN Klausel an die Queries an und schließe Sie mit einem ) ab nachdem du das letzte Komma entfernt hast
-            } else {
-                if ($counter == 0) {
-                    $pidQuery .= "NULL";
-                }
-                if ($counter > 0) {
+        // Das Array mit den IDs (z.B. Array ( [0] => 7 [1] => 9 [2] => 4 )) durchlaufen wir jetzt und bauen eine SQL IN(xx,yy,zz) query für departement PIDs daraus
+        // Wenn das Array mir den IDs von Anfang an leer ist, schreiben wir in die ID Abfrage eine NULL für einen leeren Wert, damit wir keine SQL Errors bekommen und schließen die Abfrage mit einem ')' ab
+        if (empty($arrIds)) {
+            $pidQuery .= "NULL";
+            $pidQuery .= ")";
+
+        // Wenn wir ein existierendes Array übergeben bekommen haben, dann bauen wir daraus eine IN(xx,yy,zz) Abfrage für die IDs
+        } else {
+            // Wir brauchen noch einen $counter und eine $arrLen Gesamtlänge des Arrays, um den letzten Durchlauf der foreach Schleife abfragen zu können, um die Klammer zu setzen zu können und das letzte Komma zu entfernen
+            $counter = 0;
+            $arrLen = count($arrIds);
+            foreach($arrIds as $key => $currentArray) {
+                // Füge die jetzige ID aus dem Array an die pidQuery
+                $currentId = $arrIds[$key];
+                $pidQuery .= "$currentId".",";
+                // Wenn wir den letzten Durchlauf haben wie gesagt: Klammer schließen und Komma entfernen
+                if ($counter == $arrLen - 1) {
                     $pidQuery = substr($pidQuery, 0, -1);
+                    $pidQuery .= ")";
                 }
-                $pidQuery .= ")";
-                // Wir sind durch alle IDs durch oder durch die maximale erlaubte Anzahl an IDs ($maxAbteilungen) -> die erweiterte $pidQuery zu den Queries anhängen
-                $query .= $pidQuery;
-                $fallbackQuery .= $pidQuery;
-                break;
+                // Erhöhe den Counter nach jedem Durchlauf des Arrays, um den Vergleich mit $arrLen für den letzten Durchlauf vollziehen zu können
+                $counter++;
             }
         }
+        $query .= $pidQuery;
+        $fallbackQuery .= $pidQuery;
 
         // Jetzt hängen wir noch eine AND Klausel für die Sprache an, sowie eine Sortierung der Abteilungsnamen von A - Z
         $query .= " AND abtname_lang = $language ORDER BY abtname_bez ASC";
@@ -266,16 +269,18 @@ class HelperClass extends \Backend
         if (!empty($fetchRes)) {
             // String aus Array aufbereiten
             $departementsString = "";
-            // TODO Mit foreach Schleife umschreiben
-            for ($counter=0; $counter < $maxAbteilungen; $counter++) {
-                $departementName = $fetchRes[$counter]['abtname_bez'];
-                if (!empty($departementName)) {
-                    $departementsString .= "$departementName";
-                    $departementsString .= ", ";
-                } else {
+
+            $counter = 0;
+            $arrLen = count($fetchRes);
+            foreach($fetchRes as $key => $currentArray) {
+                // Für jeden Array Durchlauf die Abgefragen Abteilungsnamen an den String anknüpfen und mit Komma trennen
+                $departementName = $fetchRes[$key]['abtname_bez'];
+                $departementsString .= "$departementName".", ";
+                // Im letzten errechneten Durchlauf das letzte Leerzeichen und Komma entfernen
+                if ($counter == $arrLen - 1) {
                     $departementsString = substr($departementsString, 0, -2);
-                    break;
                 }
+                $counter++;
             }
         } else {
             $departementsString = "Keine Abteilung zur jetzigen Sprache vorhanden.";

@@ -4,7 +4,7 @@
  * @package   AnsprechpartnerBundle
  * @author    (c) IXTENSA GmbH & Co. KG Internet und Webagentur -- Sebastian Zill
  * @license   GNU LGPL 3+
- * @copyright (c) 2019
+ * @copyright (c) 2020
  */
 
  // BACK END FORM FIELDS, z.B. genutzt für eigene Widgets in Inhaltselementen
