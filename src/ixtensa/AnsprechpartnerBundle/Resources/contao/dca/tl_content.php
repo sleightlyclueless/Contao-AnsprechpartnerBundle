@@ -4,7 +4,7 @@
  * @package   AnsprechpartnerBundle
  * @author    (c) IXTENSA GmbH & Co. KG Internet und Webagentur -- Sebastian Zill
  * @license   GNU LGPL 3+
- * @copyright (c) 2019
+ * @copyright (c) 2020
  */
 
 // DCA Erweiterungen: Backend von Contao um Data Container Arrays Erweitern: Zusätzliche Eingabefeleder für verschiedenste Bereiche erstellen und konfigurieren. z.B. Für Backend Module
@@ -20,10 +20,11 @@ use \ixtensa\AnsprechpartnerBundle\Widget\AbtMenu;
 // Wir fügen jetzt wieder Felder, Labels und so weiter für unsere Module zu Contao hinzu - und brauchen dafür immer eine bestimmte Tabelle, die in der /Resources/contao/config/config.php schon instanziert wurde. In diesem Fall erweitern wir allerdings eine bereits bestehende Tabelle für die Inhaltselemente der Artikel - die tl_content. Da für den entsprechenden Backend Bereich immer Modular die gleiche Tabelle verwendet werden sollte ist es besser wenn wir diese hier zentral anlegen. Man wird sehen der $strName kommt in dieser Datei oft vor. Wenn sich der Tabellenname ändern soll müssen wir das hier dann nur einmal konfigurieren.
 $strName = 'tl_content';
 
-// Einen weiteren Selector hinzufügen und NICHT die anderen überschreiben: ['__selector__'][]
+// Einen weiteren Selector hinzufügen und NICHT die anderen ÜBERSCHREIBEN: ['__selector__'][]
 $GLOBALS['TL_DCA'][$strName]['palettes']['__selector__'][] = 'ansprechpartnerType';
 
 // So, wir haben jetzt mehrere Paletten, von denen eine eingefügt wird, je nach dem welche Value das Selector Feld ansprechpartnerType trägt. Diese Werte sind in dem reference und options Tag vom DCA Feld vergeben und in der /Resources/contao/languages/de/default.php konfiguriert. Es ändert sich eigentlich immer nur ein Feld nach ansprechpartnerType je nach dem welcher Modus zum einfügen gewählt wurde
+// Default Felder
 $GLOBALS['TL_DCA'][$strName]['palettes']['ansprechpartner'] = '{type_legend},type;{contactPerson_legend},ansprechpartnerType;{expert_legend:hide},guests,cssID;{grid_legend},grid_columns,grid_options;{invisible_legend:hide},invisible,start,stop;';
 $GLOBALS['TL_DCA'][$strName]['palettes']['Einzeln'] = '{type_legend},type;{contactPerson_legend},ansprechpartnerType,ansprechpartnerpicker;{expert_legend:hide},guests,cssID;{grid_legend},grid_columns,grid_options;{invisible_legend:hide},invisible,start,stop;';
 $GLOBALS['TL_DCA'][$strName]['palettes']['Individuell'] = '{type_legend},type;{contactPerson_legend},ansprechpartnerType,ansprechpartnercheckboxes;{expert_legend:hide},guests,cssID;{grid_legend},grid_columns,grid_options;{invisible_legend:hide},invisible,start,stop;';
@@ -131,117 +132,6 @@ class tl_content_ansprechpartner extends \Backend
 		$this->import('BackendUser', 'User');
 	}
 
-	/**
-	 * Return the "toggle visibility" button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
-	{
-		if (strlen(Input::get('tid')))
-		{
-			$this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null));
-			$this->redirect($this->getReferer());
-		}
-
-		// Check permissions AFTER checking the tid, so hacking attempts are logged
-		if (!$this->User->hasAccess('tl_content::invisible', 'alexf'))
-		{
-			return '';
-		}
-
-		$href .= '&amp;id='.Input::get('id').'&amp;tid='.$row['id'].'&amp;state='.$row['invisible'];
-
-		if ($row['invisible'])
-		{
-			$icon = 'invisible.gif';
-		}
-
-		return '<a href="'.$this->addToUrl($href).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label, 'data-state="' . ($row['invisible'] ? 0 : 1) . '"').'</a> ';
-	}
-
-	/**
-	 * Toggle the visibility of an element
-	 *
-	 * @param integer       $intId
-	 * @param boolean       $blnVisible
-	 * @param DataContainer $dc
-	 */
-	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
-	{
-		// Set the ID and action
-		Input::setGet('id', $intId);
-		Input::setGet('act', 'toggle');
-
-		if ($dc)
-		{
-			$dc->id = $intId; // see #8043
-		}
-
-		$this->checkPermission();
-
-		// Check the field access
-		if (!$this->User->hasAccess('tl_content::invisible', 'alexf'))
-		{
-			$this->log('Not enough permissions to publish/unpublish content element ID "'.$intId.'"', __METHOD__, TL_ERROR);
-			$this->redirect('contao/main.php?act=error');
-		}
-
-		// The onload_callbacks vary depending on the dynamic parent table (see #4894)
-		if (is_array($GLOBALS['TL_DCA']['tl_content']['config']['onload_callback']))
-		{
-			foreach ($GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'] as $callback)
-			{
-				if (is_array($callback))
-				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}(($dc ?: $this));
-				}
-				elseif (is_callable($callback))
-				{
-					$callback(($dc ?: $this));
-				}
-			}
-		}
-
-		$objVersions = new Versions('tl_content', $intId);
-		$objVersions->initialize();
-
-		// Trigger the save_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_content']['fields']['invisible']['save_callback']))
-		{
-			foreach ($GLOBALS['TL_DCA']['tl_content']['fields']['invisible']['save_callback'] as $callback)
-			{
-				if (is_array($callback))
-				{
-					$this->import($callback[0]);
-					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, ($dc ?: $this));
-				}
-				elseif (is_callable($callback))
-				{
-					$blnVisible = $callback($blnVisible, ($dc ?: $this));
-				}
-			}
-		}
-
-		// Update the database
-		$this->Database->prepare("UPDATE tl_content SET tstamp=". time() .", invisible='" . ($blnVisible ? '' : 1) . "' WHERE id=?")
-					   ->execute($intId);
-
-		$objVersions->create();
-	}
-
-
-
-
-    // Custom Functions
 
     // Wir zeigen im options_callback nur die veröffentlichten Ansprechpartner, der rest kann nicht ausgewählt werden
     public function getAnsprechpartner() {

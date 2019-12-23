@@ -4,7 +4,7 @@
  * @package   AnsprechpartnerBundle
  * @author    (c) IXTENSA GmbH & Co. KG Internet und Webagentur -- Sebastian Zill
  * @license   GNU LGPL 3+
- * @copyright (c) 2019
+ * @copyright (c) 2020
  */
 
 // Wir Betexten in dieser Datei jetzt INhaltselente und Ihre Felderlabels wir brauchen auch hier für die DCA oft eine bestimmte Tabelle dieses Inhaltselementes - nämlich die tl_content in der die Inhaltselemente und Widgets abgespeichert sind, auch die eigenen. Da für den entsprechenden Backend Bereich immer Modular die gleiche Tabelle verwendet werden sollte, die auch in der gleichnamigen DCA Datei (diese Datei hier sollte auch den selben Namen haben) vorkommen, ist es besser wenn wir diese Tabelle hier zentral benennen. Man wird sehen der $strName kommt in dieser Datei oft vor. Wenn sich der Tabellenname ändern soll müssen wir das hier dann nur einmal konfigurieren.

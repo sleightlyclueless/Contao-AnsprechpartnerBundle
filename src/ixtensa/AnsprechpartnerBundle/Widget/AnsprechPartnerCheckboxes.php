@@ -4,10 +4,10 @@
  * @package   AnsprechpartnerBundle
  * @author    (c) IXTENSA GmbH & Co. KG Internet und Webagentur -- Sebastian Zill
  * @license   GNU LGPL 3+
- * @copyright (c) 2019
+ * @copyright (c) 2020
  */
 
-// Eigenes Widget Checkbox Menü Feld mit Abteilungen aus Abteilungserweiterung, die in Checklistenformat ausgegeben werden (Dateien: config, tl_bemod_abteilungen, /Widget/Abtmenu.php)
+// Eigenes Widget Checkbox Menü Feld mit Abteilungen aus Abteilungserweiterung, die in Checklistenformat ausgegeben werden (Dateien: config, tl_bemod_abteilungen, /Widget/AnsprechPartnerCheckboxes.php)
 // Der Code wurde vom Contao Core verwendet und leicht abgeändert (vendor/contao/core-bundle/src/Resources/contao/widgets/CheckBox.php)
 
 // Namespace: Der eindeutige Pfad, der auf diese entsprechende PHP Datei zeigt, damit sie von anderen Orten aus eindeutig aufgerufen und oder referenziert werden kann.
@@ -17,6 +17,9 @@ namespace ixtensa\AnsprechpartnerBundle\Widget;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 
+// Diese neue Checkbox wird im Zuge der Ansprechpartner Checkboxen jetzt als Klasse zu den Widgets von Contao / Symfonie hinzugefügt, kann dann also als Classe / Widget später in der DCA Datei referenziert und verwendet werden.
+// Noch einmal: Der folgende Code stammt hauptsächlich nun von der (vendor/contao/core-bundle/src/Resources/contao/widgets/CheckBox.php) und wurde für unser Widget leicht angepasst.
+// Warum das ganze? Wenn die standard Widgets überschrieben werden, wird dieses Separat genommen und funktioniert noch, bei veränderten Standard Widgets ggf. nicht mehr
 class AnsprechPartnerCheckboxes extends \Widget
 {
 
