@@ -1,0 +1,23 @@
+/* Add Icon to the headline of backend modules */
+.group-ixtensa_xtheme {
+	background: url(../img/icon-ixtensa.svg) 3px 0 no-repeat;
+    background-size: 15px 15px;
+}
+
+/* MultiColumnWizard sets the max width to 800px for some reason - We want full width */
+#tl_ixe_employeedata .tl_modulewizard {
+    max-width: unset;
+}
+
+/* Add new style widths for multicolumnwizard styles in the backend via adding those classes in the dca */
+#tl_ixe_employeedata .w40 {
+    width: 40%;
+}
+#tl_ixe_employeedata .w30 {
+    width: 30%;
+}
+
+/* Wenn gewünscht kann man diese Zeilen einfügen, um zentral die Meldungen für Ausgabe leere Inhalte und Warnungen gewisser Sprachen zu verstecken, sodass sie nur im HTML Code sichtbar sind */
+/* .empty {
+    visibility: hidden;
+} */
