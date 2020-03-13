@@ -1,0 +1,101 @@
+<?php $this->extend('block_searchable'); ?>
+
+<?php $this->block('content'); ?>
+
+<?php $counter = 0; ?>
+<?php foreach ($this->arrData['arrAnsprechData'] as $currData): ?>
+    <?php if($currData["published"]): ?>
+        <div class="employee_<?= $this->id; ?>" itemscope itemtype="http://schema.org/Person">
+
+            <?php if($currData["addImage"]): ?>
+                <div class="employee-image">
+                    <?php $this->insert('image', (array)($currData['arrPicture'][0])); ?>
+                </div>
+            <?php endif; ?>
+
+            <div class="employee-data">
+                <?php if($currData["firstname"] && $currData["name"]): ?>
+                    <p class="person">
+                        <?php if($currData["salutation"]): ?>
+                            <span class="salutation" itemprop="honorificPrefix"><?= $currData["salutation"] . ' '?></span>
+                        <?php else: ?>
+                            <span class="empty"><?= $currData["salutation_empty"] ?></span>
+                        <?php endif; ?>
+
+                        <?php if($currData["title"]): ?>
+                            <span class="title" itemprop="honorificSuffix"><?= $currData["title"] . ' '?></span>
+                        <?php else: ?>
+                            <span class="empty"><?= $currData["title_empty"] ?></span>
+                        <?php endif; ?>
+
+                        <span class="givenname" itemprop="givenName"><?= $currData["firstname"] . ' '?></span>
+                        <span class="familyname" itemprop="familyName"><?= $currData["name"]?></span>
+                    </p>
+                <?php endif; ?>
+
+                <?php if($currData["jobtitle"]): ?>
+                    <p class="job-title" itemprop="jobTitle"><?= $currData["jobtitle"] ?>
+                    </p>
+                <?php endif; ?>
+
+                <?php if($currData["addDepartement"] && $currData["departementCheckList"]): ?>
+                    <p class="departements" itemprop="department"><?= $currData["departementCheckList"] ?></p>
+                <?php endif; ?>
+
+                <?php if($currData["phone"]): ?>
+                    <p class="data phone">
+                        <a itemprop="telephone" href="tel:<?= preg_replace('/\s+/', '', $currData["phone"]); ?>">
+                            <i class="icon icon-phone"> </i>
+                            <?php if($currData["phoneLinktext"]): ?><?= $currData["phoneLinktext"] ?><?php else: ?><?= $currData["phone"] ?><?php endif; ?>
+                        </a>
+                    </p>
+                <?php else: ?>
+                    <p class="empty"><?= $currData["phone_empty"] ?></p>
+                <?php endif; ?>
+
+                <?php if($currData["mobile"]): ?>
+                    <p class="data mobile">
+                        <a itemprop="telephone" href="tel:<?= preg_replace('/\s+/', '', $currData["mobile"]); ?>">
+                            <i class="icon icon-mobile"> </i>
+                            <?php if($currData["mobileLinktext"]): ?><?= $currData["mobileLinktext"] ?><?php else: ?><?= $currData["mobile"] ?><?php endif; ?>
+                        </a>
+                    </p>
+                <?php else: ?>
+                    <p class="empty"><?= $currData["mobile_empty"] ?></p>
+                <?php endif; ?>
+
+                <?php if($currData["fax"]): ?>
+                    <p itemprop="faxNumber" class="data fax">
+                        <a itemprop="telephone" href="fax:<?= preg_replace('/\s+/', '', $currData["mobile"]); ?>">
+                            <i class="icon icon-print"> </i>
+                            <?php if($currData["faxLinktext"]): ?><?= $currData["faxLinktext"] ?><?php else: ?><?= $currData["fax"] ?><?php endif; ?>
+                        </a>
+                    </p>
+                <?php else: ?>
+                    <p class="empty"><?= $currData["fax_empty"] ?></p>
+                <?php endif; ?>
+
+                <?php if($currData["email"]): ?>
+                    <p class="data email">
+                        <a itemprop="email" href="mailto:<?= $currData["email"] ?>">
+                            <i class="icon icon-envelope-o"> </i>
+                            <?php if($currData["emailLinktext"]): ?><?= $currData["emailLinktext"] ?><?php else: ?><?= $currData["email"] ?><?php endif; ?>
+                        </a>
+                    </p>
+                <?php else: ?>
+                    <p class="empty"><?= $currData["email_empty"] ?></p>
+                <?php endif; ?>
+            </div>
+
+            <?php if($currData["text"]): ?>
+                <div class="employee-description">
+                    <div class="text"><?= $currData["text"] ?></div>
+                </div>
+            <?php endif; ?>
+
+        </div>
+    <?php endif; ?>
+    <?php $counter++; ?>
+<?php endforeach; ?>
+
+<?php $this->endblock(); ?>
