@@ -1,5 +1,0 @@
-/* Manchmal nimmt Contao / Browser / Cache / Composer (???) aus der //src/ixtensa/AnsprechpartnerBundle/Resources/contao/config/config.php den hideinnavigation => true nicht. Deswegen hier noch einmal per CSS ausblenden */
-
-.tl_parent#zix_ansprechpartner .tl_level_2 .navigation.abteilungen{
-    display: none;
-}
