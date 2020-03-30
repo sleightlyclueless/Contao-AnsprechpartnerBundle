@@ -14,7 +14,7 @@
  namespace ixtensa\EmployeeBundle\Widget;
 
 
- // Das neue Widget wird jetzt als eigene Klasse zu den Widgets von Contao / Symfony hinzugefügt, kann dann also als Classe / Widget später in der DCA Datei referenziert und verwendet werden.
+ // Das neue Widget wird jetzt als eigene Klasse zu den Widgets von Contao / Symfony hinzugefügt, kann dann also als Klasse / Widget später in der DCA Datei referenziert und verwendet werden.
  // Wir verwenden ein eigenes Widget, damit wenn die Core Templates unvorhergesehen abgeändert werden, dieses Widget unbetroffen bleibt und kein unvorhergesehenes Verhalten entsteht.
 class EmployeePicker extends \Widget
 {

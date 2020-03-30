@@ -17,11 +17,11 @@ $GLOBALS['TL_LANG']['CTE']['employee'] = ['Mitarbeiter'];
 $GLOBALS['TL_LANG']['tl_content']['contactPerson_legend'] = 'Mitarbeiter Auswahl';
 
 // Übergeordnetes Select Field für die Palettes betexten
-$GLOBALS['TL_LANG']['tl_content']['employeeType'] = ['Mitarbeiter Einfügemodus', 'Wählen Sie aus der gegebenen Liste den Einfügemodus für die Mitarbeiter. Einzeln: Einen einzigen Mitarbeiter zum einfügen auswählen. Individuell: Wählen Sie per Checkboxes die Mitarbeiter, die eingefügt werden sollen aus. Abteilungen: Wählen Sie die Abteilungen aus, zu denen die Mitarbeiter eingefügt werden sollen. Alle: Alle Mitarbeiter ausgeben.'];
+$GLOBALS['TL_LANG']['tl_content']['employeeType'] = ['Mitarbeiter Einfügemodus', 'Wählen Sie aus der gegebenen Liste den Einfügemodus für die Mitarbeiter. Einzeln: Einen einzigen Mitarbeiter zum einfügen auswählen. Individuell: Wählen Sie per Checkboxes die Mitarbeiter, die eingefügt werden sollen aus. Abteilungen: Wählen Sie die Abteilungen aus, zu denen die Mitarbeiter eingefügt werden sollen. Alle: Alle Mitarbeiter ausgeben'];
 // Die CTE Options müssen zur Abfrage für die Paletten im String gleich mit den vergebenen Options sein
 $GLOBALS['TL_LANG']['tl_content']['employeeType']['options'] = ['Einzeln', 'Individuell', 'Abteilungen', 'Alle'];
 // Unser eigenes Widget für das Inhaltselement - der EmployeePicker muss hier noch eine Betextung bekommen.
-$GLOBALS['TL_LANG']['tl_content']['employeepicker'] = ['Einzelnen Mitarbeiter', 'Wählen Sie aus dem gegebenen Select - Menü den Mitarbeiter, den Sie in das Frontend übernehmen wollen.'];
+$GLOBALS['TL_LANG']['tl_content']['employeepicker'] = ['Einzelnen Mitarbeiter', 'Wählen Sie aus dem gegebenen Select - Menü den Mitarbeiter, den Sie in das Frontend übernehmen wollen'];
 $GLOBALS['TL_LANG']['tl_content']['employeecheckboxes'] = ['Individuelle Mitarbeiter', 'Wählen Sie aus der gegebenen Checkliste die Mitarbeiter, die Sie in das Frontend übernehmen wollen. Die Sortierung erfolgt nach dem vergebenen Sortierindex und sekundär alphabetisch nach dem Nachnamen. Beachten Sie bitte auch, dass ein Mitarbeiter, der in der zentralen Verwaltung ausgeblendet ist oder später ausgeblendet wird, nicht im Frontend angezeigt wird!'];
 $GLOBALS['TL_LANG']['tl_content']['departementcheckboxes'] = ['Nach Abteilungen', 'Wählen Sie aus der gegebenen Liste die Abteilung, dessen Mitarbeiter Sie in das Frontend übernehmen wollen. Die Sortierung erfolgt nach dem vergebenen Sortierindex und sekundär alphabetisch nach dem Nachnamen. Beachten Sie bitte auch, dass ein Mitarbeiter, der in der zentralen Verwaltung ausgeblendet ist oder später ausgeblendet wird, nicht im Frontend angezeigt wird!'];
 

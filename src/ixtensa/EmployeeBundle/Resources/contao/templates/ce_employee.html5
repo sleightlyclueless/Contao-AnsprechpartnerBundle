@@ -2,10 +2,9 @@
 
 <?php $this->block('content'); ?>
 
-<?php $counter = 0; ?>
 <?php foreach ($this->arrData['arrAnsprechData'] as $currData): ?>
     <?php if($currData["published"]): ?>
-        <div class="employee_<?= $this->id; ?>" itemscope itemtype="http://schema.org/Person">
+        <div class="employee-container employee_<?= $this->id; ?>" itemscope itemtype="http://schema.org/Person">
 
             <?php if($currData["addImage"]): ?>
                 <div class="employee-image">
@@ -34,8 +33,9 @@
                 <?php endif; ?>
 
                 <?php if($currData["jobtitle"]): ?>
-                    <p class="job-title" itemprop="jobTitle"><?= $currData["jobtitle"] ?>
-                    </p>
+                    <p class="job-title" itemprop="jobTitle"><?= $currData["jobtitle"] ?></p>
+                <?php else: ?>
+                    <p class="empty"><?= $currData["jobtitle_empty"] ?></p>
                 <?php endif; ?>
 
                 <?php if($currData["addDepartement"] && $currData["departementCheckList"]): ?>
@@ -95,7 +95,6 @@
 
         </div>
     <?php endif; ?>
-    <?php $counter++; ?>
 <?php endforeach; ?>
 
 <?php $this->endblock(); ?>

@@ -46,14 +46,14 @@ $GLOBALS['TL_LANG'][$strName]['published_legend'] = 'Mitarbeiter veröffentliche
 $GLOBALS['TL_LANG'][$strName]['translations_lang'] = ['Sprache', 'Hier können Sie die Sprache auswählen, zu der dieser Text ausgegeben werden soll'];
 
 // Anrede
-$GLOBALS['TL_LANG'][$strName]['salutation'] = ['Anrede Einstellungen', 'Hier können Sie die gewünschte Anrede zu der Kontaktperson auswählen (z.B. Herr, Frau, Divers auf deutsch). Wenn das Feld für eine gewisse Sprache leer sein soll fügen Sie die Sprache dennoch hinzu und lassen Sie das Feld leer oder befüllen es mit einem non break space ([nbsp])'];
+$GLOBALS['TL_LANG'][$strName]['salutation'] = ['Anrede Einstellungen', 'Hier können Sie die gewünschte Anrede zu der Kontaktperson eingeben (z.B. Herr, Frau, Divers auf deutsch). Wenn das Feld für eine gewisse Sprache leer sein soll fügen Sie die Sprache dennoch hinzu und lassen Sie das Feld leer oder befüllen es mit einem non break space ([nbsp])'];
 $GLOBALS['TL_LANG'][$strName]['salutation_content'] = ['Anrede', 'Gebe Sie hier die gewünschte Anrede zu der Kontaktperson ein, (z.B. Herr, Frau, Divers auf deutsch)'];
 $GLOBALS['TL_LANG'][$strName]['title'] = ['Titel Einstellungen', 'Hier können Sie einen oder mehrere Titel der Kontaktperson eingeben (z.B. Dipl. Ing.). Wenn das Feld für eine gewisse Sprache leer sein soll fügen Sie die Sprache dennoch hinzu und lassen Sie das Feld leer oder befüllen es mit einem non break space ([nbsp])'];
 $GLOBALS['TL_LANG'][$strName]['title_content'] = ['Titel', 'Geben Sie hier einen oder mehrere Titel der Kontaktperson ein (z.B. Dipl. Ing.)'];
 
 // Name
-$GLOBALS['TL_LANG'][$strName]['name'] = ['Name', 'Geben Sie hier den Familiennamen, bzw. Nachnamen des Mitarbeiters ein'];
 $GLOBALS['TL_LANG'][$strName]['firstname'] = ['Vorname', 'Geben Sie hier den Vornamen des Mitarbeiters ein'];
+$GLOBALS['TL_LANG'][$strName]['name'] = ['Nachname', 'Geben Sie hier den Familiennamen, bzw. Nachnamen des Mitarbeiters ein'];
 
 // Weitere Daten zur Arbeitsumgebung
 $GLOBALS['TL_LANG'][$strName]['addDepartement'] = ['Abteilung hinzufügen', 'Hier können Sie einstellen, ob Abteilungen zu dem Mitarbeiter hinzugefügt werden soll'];

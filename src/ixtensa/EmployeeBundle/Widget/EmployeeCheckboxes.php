@@ -17,7 +17,7 @@ namespace ixtensa\EmployeeBundle\Widget;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 
-// Das neue Widget wird jetzt als eigene Klasse zu den Widgets von Contao / Symfony hinzugefügt, kann dann also als Classe / Widget später in der DCA Datei referenziert und verwendet werden.
+// Das neue Widget wird jetzt als eigene Klasse zu den Widgets von Contao / Symfony hinzugefügt, kann dann also als Klasse / Widget später in der DCA Datei referenziert und verwendet werden.
 // Wir verwenden ein eigenes Widget, damit wenn die Core Templates unvorhergesehen abgeändert werden, dieses Widget unbetroffen bleibt und kein unvorhergesehenes Verhalten entsteht.
 // Durch den 'foreignKey'  => 'tl_ixe_employeedata aus der DCA Datei kommen hier dann unsere Optionen aus der Mitarbeiter Erweiterung hinzu.
 class EmployeeCheckboxes extends \Widget

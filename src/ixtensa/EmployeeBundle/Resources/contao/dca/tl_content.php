@@ -20,16 +20,16 @@ use \ixtensa\EmployeeBundle\Widget\AbtMenu;
 // Wir fügen jetzt wieder Felder, Labels und so weiter für unsere Module zu Contao hinzu - und brauchen dafür immer eine bestimmte Tabelle, die in der /Resources/contao/config/config.php schon instanziert wurde. In diesem Fall erweitern wir allerdings eine bereits bestehende Tabelle für die Inhaltselemente der Artikel - die tl_content. Da für den entsprechenden Backend Bereich immer Modular die gleiche Tabelle verwendet werden sollte ist es besser wenn wir diese hier zentral anlegen. Man wird sehen der $strName kommt in dieser Datei oft vor. Wenn sich der Tabellenname ändern soll müssen wir das hier dann nur einmal konfigurieren.
 $strName = 'tl_content';
 
-// Einen weiteren Selector hinzufügen und NICHT die anderen ÜBERSCHREIBEN: ['__selector__'][]
+// Einen weiteren Selector für subpalettes hinzufügen und NICHT die anderen ÜBERSCHREIBEN: ['__selector__'][]
 $GLOBALS['TL_DCA'][$strName]['palettes']['__selector__'][] = 'employeeType';
-
-// So, wir haben jetzt mehrere Paletten, von denen eine eingefügt wird, je nach dem welche Value das Selector Feld employeeType trägt. Diese Werte sind in dem reference und options Tag vom DCA Feld vergeben und in der /Resources/contao/languages/de/default.php konfiguriert. Es ändert sich eigentlich immer nur ein Feld nach employeeType je nach dem welcher Modus zum einfügen gewählt wurde
 // Default Felder
 $GLOBALS['TL_DCA'][$strName]['palettes']['employee'] = '{type_legend},type;{contactPerson_legend},employeeType;{expert_legend:hide},guests,cssID;{template_legend:hide},customTpl;{invisible_legend:hide},invisible,start,stop;';
-$GLOBALS['TL_DCA'][$strName]['palettes']['Einzeln'] = '{type_legend},type;{contactPerson_legend},employeeType,employeepicker;{expert_legend:hide},guests,cssID;{template_legend:hide},customTpl;{invisible_legend:hide},invisible,start,stop;';
-$GLOBALS['TL_DCA'][$strName]['palettes']['Individuell'] = '{type_legend},type;{contactPerson_legend},employeeType,employeecheckboxes;{expert_legend:hide},guests,cssID;{template_legend:hide},customTpl;{invisible_legend:hide},invisible,start,stop;';
-$GLOBALS['TL_DCA'][$strName]['palettes']['Abteilungen'] = '{type_legend},type;{contactPerson_legend},employeeType,departementcheckboxes;{expert_legend:hide},guests,cssID;{template_legend:hide},customTpl;{invisible_legend:hide},invisible,start,stop;';
-$GLOBALS['TL_DCA'][$strName]['palettes']['Alle'] = '{type_legend},type;{contactPerson_legend},employeeType;{expert_legend:hide},guests,cssID;{template_legend:hide},customTpl;{invisible_legend:hide},invisible,start,stop;';
+
+// Um einen Select oder Radio selector mit subpalettes zu verwenden, kann man die Felder mit dem Wert verknüpft mit '_' abfragen: feldname_wert
+$GLOBALS['TL_DCA'][$strName]['subpalettes']['employeeType_Einzeln'] = 'employeepicker';
+$GLOBALS['TL_DCA'][$strName]['subpalettes']['employeeType_Individuell'] = 'employeecheckboxes';
+$GLOBALS['TL_DCA'][$strName]['subpalettes']['employeeType_Abteilungen'] = 'departementcheckboxes';
+$GLOBALS['TL_DCA'][$strName]['subpalettes']['employeeType_Alle'] = '';
 
 
 // Selector Select Feld mit eine Auswahl mehrer Einfügearten der Mitarbeiter, in der /Resources/contao/languages/de/default.php konfiguriert und Folgepaletten werden entsprechend der Auswahl geladen.

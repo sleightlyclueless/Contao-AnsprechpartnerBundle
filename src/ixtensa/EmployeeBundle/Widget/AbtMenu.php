@@ -7,7 +7,7 @@
  * @copyright (c) 2020
  */
 
-// Eigenes Widget Checkbox Menü Feld mit Abteilungen aus Abteilungserweiterung, die in Checklistenformat ausgegeben werden (Referenziert in folgenden Dateien: /Resources/contao/config, /Resources/contao/dca/tl_ixe_departement, /Resources/contao/languages/.../tl_ixe_departement, /Widget/Abtmenu.php)
+// Eigenes Widget Checkbox Menü Feld mit Abteilungen aus Abteilungserweiterung, die in Checklistenformat ausgegeben werden (Referenziert in folgenden Dateien: /Resources/contao/config, /Resources/contao/dca/tl_ixe_employeedata, /Resources/contao/languages/.../tl_ixe_employeedata, /Widget/Abtmenu.php)
 // Der Code wurde vom Contao Core verwendet und leicht abgeändert (vendor/contao/core-bundle/src/Resources/contao/widgets/CheckBox.php)
 
 // Namespace: Der eindeutige Pfad, der auf diese entsprechende PHP Datei zeigt, damit sie von anderen Orten aus eindeutig aufgerufen und oder referenziert werden kann.
@@ -17,7 +17,7 @@ namespace ixtensa\EmployeeBundle\Widget;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 
-// Das neue Widget wird jetzt als eigene Klasse zu den Widgets von Contao / Symfony hinzugefügt, kann dann also als Classe / Widget später in der DCA Datei referenziert und verwendet werden.
+// Das neue Widget wird jetzt als eigene Klasse zu den Widgets von Contao / Symfony hinzugefügt, kann dann also als Klasse / Widget später in der DCA Datei referenziert und verwendet werden.
 // Wir verwenden ein eigenes Widget, damit wenn die Core Templates unvorhergesehen abgeändert werden, dieses Widget unbetroffen bleibt und kein unvorhergesehenes Verhalten entsteht.
 // Durch den 'foreignKey'  => 'tl_ixe_departement.departementname aus der DCA Datei kommen hier dann unsere Optionen aus der Abteilungs Erweiterung hinzu.
 class AbtMenu extends \Widget

@@ -134,7 +134,7 @@ $GLOBALS['TL_DCA'][$strName] = array
 	'palettes' => array
 	(
         '__selector__'                => array('addDepartement','addImage', 'overwriteMeta'),
-		'default' => '{salutation_legend},salutation,title;{name_legend},name,firstname;{meta_legend},addDepartement,jobtitle;{contact_legend},phone,mobile,fax,email;{more_legend},text;{image_legend},addImage;{sorting_legend},sortingIndex;{published_legend},published;'
+		'default' => '{salutation_legend},salutation,title;{name_legend},firstname,name;{meta_legend},addDepartement,jobtitle;{contact_legend},phone,mobile,fax,email;{more_legend},text;{image_legend},addImage;{sorting_legend},sortingIndex;{published_legend},published;'
 	),
 
     // Subpalettes: Subpalettes sind die Unter - Überschriften, die weitere Elemente beinhalten. In diesem Fall ist 'addImage' eine Checkbox und wenn man diese angehakt hat, sieht man erst das 'image' Feld
@@ -260,6 +260,24 @@ $GLOBALS['TL_DCA'][$strName] = array
 		    'sql'       => 'blob NULL',
         ),
 
+		// Textfeld für Vorname
+        'firstname' => array
+        (
+            'label'                   => &$GLOBALS['TL_LANG'][$strName]['firstname'],
+        	'exclude'                 => true,
+            'search'                  => true,
+        	'sorting'                 => true,
+            'filter'                  => true,
+            'flag'                    => 1,
+        	'inputType'               => 'text',
+        	'eval'                    => array(
+                                            'maxlength'=>255,
+                                            'preserveTags'=>true,
+                                            'mandatory'=>true,
+                                            'tl_class'=>'clr w50'
+                                        ),
+        	'sql'                     => "varchar(255) NOT NULL default ''"
+        ),
 
         // Textfeld für Nachname
         'name' => array
@@ -275,29 +293,10 @@ $GLOBALS['TL_DCA'][$strName] = array
                                             'maxlength'=>255,
                                             'preserveTags'=>true,
                                             'mandatory'=>true,
-                                            'tl_class'=>'clr w50'
-                                        ),
-        	'sql'                     => "varchar(255) NOT NULL default ''"
-        ),
-        // Textfeld für Vorname
-        'firstname' => array
-        (
-            'label'                   => &$GLOBALS['TL_LANG'][$strName]['firstname'],
-        	'exclude'                 => true,
-            'search'                  => true,
-        	'sorting'                 => true,
-            'filter'                  => true,
-            'flag'                    => 1,
-        	'inputType'               => 'text',
-        	'eval'                    => array(
-                                            'maxlength'=>255,
-                                            'preserveTags'=>true,
-                                            'mandatory'=>true,
                                             'tl_class'=>'w50'
                                         ),
         	'sql'                     => "varchar(255) NOT NULL default ''"
         ),
-
 
         // SONDERFALL:
         // Eigenes Widget Checkbox Menü Feld mit Abteilungen aus Abteilungserweiterung, die in Checklistenformat ausgegeben werden (Dateien: /Resources/contao/config/config.php, Eingaben aus /Resources/contao/dca/tl_ixe_departement.php, /Widget/Abtmenu.php)
@@ -644,7 +643,6 @@ $GLOBALS['TL_DCA'][$strName] = array
 		    'sql'       => 'blob NULL',
         ),
 
-
         // Textarea für weitere Angaben für alle Sprachen mit tinyMCE Formatierungen
         'text' => array
         (
@@ -689,7 +687,7 @@ $GLOBALS['TL_DCA'][$strName] = array
 			'eval'				      => array(
                                         		'filesOnly'=>true,
                                         		'fieldType'=>'radio',
-                                        		'extensions' => 'jpg,png,gif',
+                                        		'extensions' => 'jpg,jpeg,gif,png,svg',
                                         		'tl_class'=>'clr'
                                     		),
             'save_callback'			  => array($strName, 'storeFileMetaInformation'),
@@ -820,7 +818,7 @@ $GLOBALS['TL_DCA'][$strName] = array
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 
-		// Sortierpriorität für Module mit mehreren Employeen. Nach dieser NATÜRLICHEN ZAHL wird ein ORDER BY DESC gemacht, bei einem Gleichstand gewinnt der Anfangsbuchstabe des Nachnamen alphabetisch
+		// Sortierpriorität für Module mit mehreren Mitarbeitern. Nach dieser NATÜRLICHEN ZAHL wird ein ORDER BY DESC gemacht, bei einem Gleichstand gewinnt der Anfangsbuchstabe des Nachnamen alphabetisch
         'sortingIndex' => array
         (
         	'label'                   => &$GLOBALS['TL_LANG'][$strName]['sortingIndex'],
@@ -999,7 +997,6 @@ class tl_ixe_employeedata extends \Backend
 		$objVersions->create();
 	}
 
-
     // Sprache Selectfeld mit den Optionen der Symfony Intl Erweiterung befüllen
     public function getLanguageOptions()
 	{
@@ -1011,7 +1008,6 @@ class tl_ixe_employeedata extends \Backend
     {
         return (empty($varValue) ? 'de' : $varValue);
     }
-
 
 	// Die Abteilungen beim Speichern eines Mitarbeiters in die Datenbank des Mitarbeiters aktualisieren. Dieses Callback ist für neue Widgets nämlich noch nicht definiert und lässt man es weg werden diese Felder einfach weder gespeichert noch geladen
     public function saveAbteilungen($varValue, DataContainer $dc)
@@ -1054,7 +1050,6 @@ class tl_ixe_employeedata extends \Backend
 
 		return $res;
 	}
-
 
 	// Save singleSRC / Image function from Contao
 	public function storeFileMetaInformation($varValue, DataContainer $dc)

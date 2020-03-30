@@ -18,26 +18,26 @@ namespace ixtensa\EmployeeBundle\Helper;
 // 2. getIdsByDelimiter()
 // --> Aus einem String in bestimmte Zeichen eingeschlossene IDs als assoziatives Array ausbereiten
 
-// 3. getEmployeeDataByIds() -->
-// Datenbankabfrage der tl_ixe_employeedata für alle Daten der Ansprechpartner mit bestimmten IDs
+// 3. getEmployeeDataByIds()
+// --> Datenbankabfrage der tl_ixe_employeedata für alle Daten der Ansprechpartner mit bestimmten IDs
 
-// 4. getAllEmployeeData() -->
-// Datenbankabfrage der tl_ixe_employeedata für alle Daten aller Ansprechpartner
+// 4. getAllEmployeeData()
+// --> Datenbankabfrage der tl_ixe_employeedata für alle Daten aller Ansprechpartner
 
-// 5. getDepartementNames() -->
-// Übergeordnete Abteilungsnamen nach Department IDs aus der tl_ixe_departement bekommen
+// 5. getDepartementNames()
+// --> Übergeordnete Abteilungsnamen nach Department IDs aus der tl_ixe_departement bekommen
 
-// 6. getDepartementTranslations() -->
-// Abteilungsnamen - Übersetzungen nach Department PIDs aus der tl_ixe_departement_lang bekommen
+// 6. getDepartementTranslations()
+// --> Abteilungsnamen - Übersetzungen nach Department PIDs aus der tl_ixe_departement_lang bekommen
 
-// 7. prepareArrayDataForTemplate() -->
-// Assoziatives Array der Ansprechpartner per foreach für jeden Ansprechpartner einzeln für Templateausgabe aufbereiten
+// 7. prepareArrayDataForTemplate()
+// --> Assoziatives Array der Ansprechpartner per foreach für jeden Ansprechpartner einzeln für Templateausgabe aufbereiten
 
-// 8. prepareArrayDataForTemplateByDepartementpicker() -->
-// Assoziatives Array der Ansprechpartner per foreach für jeden Ansprechpartner einzeln für Templateausgabe unter berücksichtigung der Zugehörigkeit einer bestimmten Abteilung aus der tl_ixe_departement aufbereiten
+// 8. prepareArrayDataForTemplateByDepartementpicker()
+// --> Assoziatives Array der Ansprechpartner per foreach für jeden Ansprechpartner einzeln für Templateausgabe unter berücksichtigung der Zugehörigkeit einer bestimmten Abteilung aus der tl_ixe_departement aufbereiten
 
-// 9. prepareArrayForLanguage() -->
-// Aus MultiColumWizard BLOBs per assoziative Arrays den Sprachinhalt für die entsprechende Sprachverseion der Seite aufbereiten
+// 9. prepareArrayForLanguage()
+// --> Aus MultiColumWizard BLOBs per assoziative Arrays den Sprachinhalt für die entsprechende Sprachverseion der Seite aufbereiten
 
 
 class HelperClass extends \Backend
@@ -86,12 +86,12 @@ class HelperClass extends \Backend
     public function getEmployeeDataByIds($arrIds) {
         // Wir bauen eine query für die Datenbank zusammen. Wir haben die ID(s) der Mitarbeiter in der Variable $arrIds an uns übergeben bekommen, die wir jetzt nutzen können um eine SQL Abfrage für die Tabelle der Employee zu bauen
         $query = "SELECT * FROM tl_ixe_employeedata WHERE ";
-        $pidQuery = "id IN(";
+        $idQuery = "id IN(";
 
         // Wenn das Array mit den IDs von Anfang an leer ist, schreiben wir in die ID Abfrage eine NULL für einen leeren Wert, damit wir keine SQL Errors bekommen und schließen die Abfrage mit einem ')' ab
         if (empty($arrIds)) {
-            $pidQuery .= "NULL";
-            $pidQuery .= ")";
+            $idQuery .= "NULL";
+            $idQuery .= ")";
 
         // Wenn wir ein existierendes Array übergeben bekommen haben, dann bauen wir daraus eine IN(xx,yy,zz) Abfrage für die IDs
         } else {
@@ -99,19 +99,19 @@ class HelperClass extends \Backend
             $counter = 0;
             $arrLen = count($arrIds);
             foreach($arrIds as $key => $currentArray) {
-                // Füge die jetzige ID aus dem Array an die pidQuery
+                // Füge die jetzige ID aus dem Array an die idQuery
                 $currentId = $arrIds[$key];
-                $pidQuery .= "$currentId".",";
+                $idQuery .= "$currentId".",";
                 // Wenn wir den letzten Durchlauf haben wie gesagt: Klammer schließen und Komma entfernen
                 if ($counter == $arrLen - 1) {
-                    $pidQuery = substr($pidQuery, 0, -1);
-                    $pidQuery .= ")";
+                    $idQuery = substr($idQuery, 0, -1);
+                    $idQuery .= ")";
                 }
                 // Erhöhe den Counter nach jedem Durchlauf des Arrays, um den Vergleich mit $arrLen für den letzten Durchlauf vollziehen zu können
                 $counter++;
             }
         }
-        $query .= $pidQuery;
+        $query .= $idQuery;
         // Jetzt hängen wir noch eine AND Klausel an welche nach Veröffentlichung prüft, sowie eine Sortierung der Mitarbeiter nach Sortierindex und Nachname von A - Z durchführt
         $query .= " AND published = 1 ORDER BY `sortingIndex` DESC, `name` ASC";
 
@@ -121,7 +121,7 @@ class HelperClass extends \Backend
     }
 
 
-    // Liefert Resultat einer SQL Abfrage der tl_ixe_employeedata mit und für alle(n) Daten zurück
+    // Liefert Resultat einer SQL Abfrage der tl_ixe_employeedata für alle Ansprechpartner Daten zurück
     public function getAllEmployeeData() {
         // Frage alle Daten aus der tl_ixe_employeedata ab und gib sie als Ausgabe zurück
         $res = \Database::getInstance()->prepare("SELECT * FROM tl_ixe_employeedata WHERE published = 1 ORDER BY `sortingIndex` DESC, `name` ASC")->execute()->fetchAllAssoc();
@@ -136,12 +136,12 @@ class HelperClass extends \Backend
         $query = "SELECT departementname FROM tl_ixe_departement WHERE ";
 
         // Wir bauen eine IN query für PIDs separat auf und hängen Sie dann an die Query dran
-        $pidQuery = "id IN(";
+        $idQuery = "id IN(";
         // Das Array mit den IDs (z.B. Array ( [0] => 7 [1] => 9 [2] => 4 )) durchlaufen wir jetzt
         // Wenn das Array mir den IDs von Anfang an leer ist, schreiben wir in die ID Abfrage eine NULL für einen leeren Wert, damit wir keine SQL Errors bekommen und schließen die Abfrage mit einem ')' ab
         if (empty($arrIds)) {
-            $pidQuery .= "NULL";
-            $pidQuery .= ")";
+            $idQuery .= "NULL";
+            $idQuery .= ")";
 
         // Wenn wir ein existierendes Array übergeben bekommen haben, dann bauen wir daraus eine IN(xx,yy,zz) Abfrage für die IDs
         } else {
@@ -149,19 +149,19 @@ class HelperClass extends \Backend
             $counter = 0;
             $arrLen = count($arrIds);
             foreach($arrIds as $key => $currentArray) {
-                // Füge die jetzige ID aus dem Array an die pidQuery
+                // Füge die jetzige ID aus dem Array an die idQuery
                 $currentId = $arrIds[$key];
-                $pidQuery .= "$currentId".",";
+                $idQuery .= "$currentId".",";
                 // Wenn wir den letzten Durchlauf haben wie gesagt: Klammer schließen und Komma entfernen
                 if ($counter == $arrLen - 1) {
-                    $pidQuery = substr($pidQuery, 0, -1);
-                    $pidQuery .= ")";
+                    $idQuery = substr($idQuery, 0, -1);
+                    $idQuery .= ")";
                 }
                 // Erhöhe den Counter nach jedem Durchlauf des Arrays, um den Vergleich mit $arrLen für den letzten Durchlauf vollziehen zu können
                 $counter++;
             }
         }
-        $query .= $pidQuery;
+        $query .= $idQuery;
 
         // Feuer die SQL Abfrage ab und speichere das Ergebnis unter einer $fetchRes Variable
         $res = \Database::getInstance()->prepare($query)->execute()->fetchAllAssoc();
@@ -307,7 +307,6 @@ class HelperClass extends \Backend
                 unset($res[$key]['imageUrl']);
             }
         }
-        dump($res[$key]);
         return $res;
     }
 
@@ -366,6 +365,7 @@ class HelperClass extends \Backend
     }
 
 
+    // Aus MultiColumWizard BLOBs per assoziative Arrays den Sprachinhalt für die entsprechende Sprachverseion der Seite aufbereiten
     public function prepareArrayForLanguage($res)
     {
         // Sprache der Seite aus den $GLOBALS auslesen um Inhalte entsprechend für diese Sprache auszugeben

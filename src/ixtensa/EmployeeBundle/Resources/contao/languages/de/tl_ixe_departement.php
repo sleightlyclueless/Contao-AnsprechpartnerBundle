@@ -18,9 +18,9 @@ $GLOBALS['TL_LANG'][$strName]['new'] = ['Neue Abteilung erstellen', 'Hier könne
 $GLOBALS['TL_LANG'][$strName]['backToEmployee'] = ['Zurück', 'Hier können Sie zurück zur Mitarbeiter Verwaltung gelangen'];
 
 // Betextung der Element Bearbeiten Operation (gelber Stift)
-$GLOBALS['TL_LANG'][$strName]['edit'] = ['Abteilungsübersetzungen bearbeiten', 'Die Übersetzungen der Abteilung ID %s bearbeiten.'];
+$GLOBALS['TL_LANG'][$strName]['edit'] = ['Abteilungsübersetzungen bearbeiten', 'Die Übersetzungen der Abteilung ID %s bearbeiten'];
 // Betextung der Element Header Bearbeiten Operation (Zange Schraubendreher)
-$GLOBALS['TL_LANG'][$strName]['editheader'] = ['Abteilung bearbeiten', 'Diese Abteilung ID %s bearbeiten.'];
+$GLOBALS['TL_LANG'][$strName]['editheader'] = ['Abteilung bearbeiten', 'Diese Abteilung ID %s bearbeiten'];
 // Betextung der Element Löschen Operation (Rotes Kreuz)
 $GLOBALS['TL_LANG'][$strName]['delete'] = ['Abteilung löschen', 'Diese Abteilung ID %s löschen'];
 // Betextung der Element Informationen anzeigen Operation (Informationssymol)

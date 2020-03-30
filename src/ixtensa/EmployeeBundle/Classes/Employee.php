@@ -80,7 +80,7 @@ class Employee extends \ContentElement
                     $this->Template->title = $GLOBALS['IX_EB']['MSC']['template_title_all'];
     				break;
 
-                // Trifft keiner der Fälle ein, setzen wir der Sauberkeit im Backend einen default Handler
+                // Trifft keiner der Fälle ein, setzen wir der Sauberkeit halber im Backend einen default Handler
     			default:
                     $this->Template->title = $GLOBALS['IX_EB']['MSC']['template_title_err'];
     				break;
@@ -112,7 +112,6 @@ class Employee extends \ContentElement
                 $res = HelperClass::getEmployeeDataByIds($employeeId);
                 // Diese Funktion verarbeitet nun die per SQL abgefragten Datensätze im Array und bereitet einige Daten (Pfade zum Bild, rendern der eingegebenen Margins etc.) noch zentral in der Helperclass auf und gibt diese als Array(s) wieder aus.
                 $arrData = HelperClass::prepareArrayDataForTemplate($res, $this->Template);
-
                 break;
 
             // Fall individuelle Mitarbeiter Checkliste
@@ -124,7 +123,6 @@ class Employee extends \ContentElement
                 $res = HelperClass::getEmployeeDataByIds($employeeIds);
                 // Diese Funktion verarbeitet nun die per SQL abgefragten Datensätze im Array und bereitet einige Daten (Pfade zum Bild, rendern der eingegebenen Margins etc.) noch zentral in der Helperclass auf und gibt diese als Array(s) wieder aus.
                 $arrData = HelperClass::prepareArrayDataForTemplate($res, $this->Template);
-
                 break;
 
             // Fall Mitarbeiter einer bestimmten Abteilung ausgeben
@@ -136,7 +134,6 @@ class Employee extends \ContentElement
                 $res = HelperClass::getAllEmployeeData();
                 // Diese Funktion verarbeitet nun die per SQL abgefragten Datensätze und gibt diese als assoziatives Array wieder aus. Dabei vergleichen wir wie bereits erwähnt auch ob die gewählten Abteilungen deckend mit dem entsprechenden Mitarbeiter sind.
                 $arrData = HelperClass::prepareArrayDataForTemplateByDepartementpicker($departementCheckboxesIDs, $res);
-
                 break;
 
             // Wenn der Modus zur Ausgabe aller Mitarbeiter gewählt wurde, geben wir auch einfach alle aus.
@@ -146,7 +143,6 @@ class Employee extends \ContentElement
                 $res = HelperClass::getAllEmployeeData();
                 // Dieses Array wird dann wieder per Helperclass Funktion mit foreach aufbereitet
                 $arrData = HelperClass::prepareArrayDataForTemplate($res, $this->Template);
-
                 break;
 
             // Trifft keiner der Fälle ein, setzen wir einen leeren default Wert für das Template, damit nicht NULL weiter gegeben wird, was zu Fehlern führen wird.

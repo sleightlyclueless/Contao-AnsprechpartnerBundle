@@ -15,7 +15,6 @@ namespace ixtensa\EmployeeBundle\dca\tl_ixe_departement;
 // Wir fügen Felder, Labels und so weiter für unsere Module jetzt zu Contao hinzu - und brauchen dafür immer eine bestimmte Tabelle, die in der /Resources/contao/config/config.php schon instanziert wurde. Da für den entsprechenden Backend Bereich immer Modular die gleiche Tabelle verwendet werden sollte ist es besser wenn wir diese hier zentral anlegen. Man wird sehen der $strName kommt in dieser Datei oft vor. Wenn sich der Tabellenname ändern soll müssen wir das hier dann nur einmal konfigurieren.
 $strName = 'tl_ixe_departement';
 
-
 // Die spezielle Konfiguration der TL_DCA für die Tabelle beginnt nun ab hier. DCA Felder für unsere Tabelle kommen hinzu.
 $GLOBALS['TL_DCA'][$strName] = array
 (
